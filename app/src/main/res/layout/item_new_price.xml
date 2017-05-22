@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_marginTop="3dp"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/new_price_name"
+        android:layout_width="0dp"
+        android:textColor="#212222"
+        android:textSize="16sp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="硬粉"
+        />
+    <TextView
+        android:id="@+id/new_price_price"
+        android:layout_width="0dp"
+        android:textColor="#fe0303"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="0.90元/斤"
+        />
+    <TextView
+        android:id="@+id/new_price_address"
+        android:layout_width="0dp"
+        android:textColor="#212222"
+        android:textSize="16sp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="山东临沂"
+        />
+    <TextView
+        android:id="@+id/new_price_date"
+        android:layout_width="0dp"
+        android:textColor="#939394"
+        android:textSize="16sp"
+        android:gravity="right"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="05月21日"
+        />
+
+
+</LinearLayout>
