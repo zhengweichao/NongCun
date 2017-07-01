@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.view.BottomTabView;
+import com.stephentuso.welcome.WelcomeHelper;
 
 import java.util.List;
 
@@ -25,11 +26,14 @@ public abstract class BottomTabBaseActivity extends AppCompatActivity {
     ViewPager viewPager;
     BottomTabView bottomTabView;
     FragmentPagerAdapter adapter;
-
+    WelcomeHelper welcomeScreen;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_bottom_tab);
+
+        welcomeScreen = new WelcomeHelper(this, VWelcomeActivity.class);
+        welcomeScreen.show(savedInstanceState);
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         bottomTabView = (BottomTabView) findViewById(R.id.bottomTabView);
@@ -63,6 +67,12 @@ public abstract class BottomTabBaseActivity extends AppCompatActivity {
 
     protected View getCenterView(){
         return null;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        welcomeScreen.onSaveInstanceState(outState);
     }
 
 }

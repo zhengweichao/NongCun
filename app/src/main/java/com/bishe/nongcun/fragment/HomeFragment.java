@@ -10,7 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 import com.bishe.nongcun.R;
+import com.bishe.nongcun.activity.MessageActivity;
+import com.bishe.nongcun.activity.LoginActivity;
 import com.bishe.nongcun.activity.MainActivity;
+import com.bishe.nongcun.activity.SignupActivity;
 import com.bishe.nongcun.adapter.MainNewsAdapter;
 import com.bishe.nongcun.adapter.MoudleAdapter;
 import com.bishe.nongcun.bean.MainNews;
@@ -20,10 +23,10 @@ import xyz.zpayh.adapter.IMultiItem;
 import xyz.zpayh.adapter.OnItemClickListener;
 
 /**
- * Created by 郑卫超 on 2017/5/3.
+ * Created by 郑卫超 on 2017/5/23.
  */
 
-public class TabFragment1 extends BaseFragment {
+public class HomeFragment extends BaseFragment {
     ArrayList<IMultiItem> data;
     String[] MoudleName = {"庭院菜","大棚菜","粮油",
             "水果","采摘","蛋类",
@@ -32,8 +35,8 @@ public class TabFragment1 extends BaseFragment {
     int[] MoudleLogo={R.mipmap.shucai,R.mipmap.shuiguo,R.mipmap.yangzhi,
             R.mipmap.liangyou,R.mipmap.miaomu,R.mipmap.zhongyao,
             R.mipmap.nongzi,R.mipmap.nongji};
-    Class[] clazz={MainActivity.class,MainActivity.class,MainActivity.class,
-            MainActivity.class,MainActivity.class,MainActivity.class,
+    Class[] clazz={LoginActivity.class,SignupActivity.class,MainActivity.class,
+            MessageActivity.class,MainActivity.class,MainActivity.class,
             MainActivity.class,MainActivity.class
     };
     private MoudleAdapter moudleAdapter;
@@ -43,7 +46,7 @@ public class TabFragment1 extends BaseFragment {
     private GridLayoutManager mGridLayoutManager;
     private LinearLayoutManager mLMNewPrice;
     private LinearLayoutManager mLMNewBuy;
-    private MainNewsAdapter mainNews;
+    private MainNewsAdapter mainNewsAdapter;
     private ArrayList<MainNews> mainNewsesdata;
 
 
@@ -73,11 +76,10 @@ public class TabFragment1 extends BaseFragment {
             MoudleItem moudleItem = new MoudleItem(MoudleLogo[i], MoudleName[i],clazz[i]);
             data.add(moudleItem);
         }
-
+//        MainNews[]
         mainNewsesdata = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            MainNews mainNews = new MainNews("" + i, "" + i, "" + i, "" + i);
-//            MoudleItem moudleItem = new MoudleItem(MoudleLogo[i], MoudleName[i],clazz[i]);
+            MainNews mainNews = new MainNews("硬粉", "0.90元/斤" ,"05月21日","山东临沂");
             mainNewsesdata.add(mainNews);
         }
 
@@ -85,12 +87,12 @@ public class TabFragment1 extends BaseFragment {
         Log.i("zwc", "onCreateView: "+width);
 
         moudleAdapter = new MoudleAdapter();
-        mainNews = new MainNewsAdapter();
-        mainNews.setData(mainNewsesdata);
+        mainNewsAdapter = new MainNewsAdapter();
+        mainNewsAdapter.setData(mainNewsesdata);
         moudleAdapter.setData(data);
 
-        rv_main_newbuy.setAdapter(mainNews);
-        rv_main_newprice.setAdapter(mainNews);
+        rv_main_newbuy.setAdapter(mainNewsAdapter);
+        rv_main_newprice.setAdapter(mainNewsAdapter);
 
     }
 

@@ -1,22 +1,25 @@
 package com.bishe.nongcun.activity;
 
 import android.support.v4.app.Fragment;
+
 import com.bishe.nongcun.R;
-import com.bishe.nongcun.fragment.TabFragment1;
+import com.bishe.nongcun.fragment.HomeFragment;
 import com.bishe.nongcun.fragment.TabFragment2;
 import com.bishe.nongcun.fragment.TabFragment3;
+import com.bishe.nongcun.fragment.TabFragment4;
 import com.bishe.nongcun.view.BottomTabView;
+
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * Created by 陈序员 on 2017/4/27.
- * Email: Matthew_Chen_1994@163.com
- * Blog: https://blog.ifmvo.cn
+ * @ 创建时间: 2017/5/21 on 10:39.
+ * @ 描述：标签基类
+ * @ 作者: 郑卫超 QQ: 2318723605
  */
 
 public class TestBottomTabBaseActivity extends BottomTabBaseActivity {
+
 
     @Override
     protected List<BottomTabView.TabItemView> getTabViews() {
@@ -36,10 +39,10 @@ public class TestBottomTabBaseActivity extends BottomTabBaseActivity {
     @Override
     protected List<Fragment> getFragments() {
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new TabFragment1());
+        fragments.add(new HomeFragment());
         fragments.add(new TabFragment2());
         fragments.add(new TabFragment3());
-        fragments.add(new TabFragment3());
+        fragments.add(new TabFragment4());
         return fragments;
     }
 
