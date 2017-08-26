@@ -19,9 +19,7 @@ import java.util.List;
 
 
 /**
- * Created by 陈序员 on 2017/4/28.
- * Email: Matthew_Chen_1994@163.com
- * Blog: https://blog.ifmvo.cn
+ * Created by 郑卫超 on 2017/6/28.
  */
 
 public class BottomTabView extends LinearLayout {

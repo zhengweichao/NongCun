@@ -8,6 +8,9 @@ import com.stephentuso.welcome.TitlePage;
 import com.stephentuso.welcome.WelcomeActivity;
 import com.stephentuso.welcome.WelcomeConfiguration;
 
+/**
+ * 欢迎页面
+ */
 public class VWelcomeActivity extends WelcomeActivity {
 
     @Override

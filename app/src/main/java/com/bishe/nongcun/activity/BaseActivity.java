@@ -4,6 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+
+import com.bishe.nongcun.R;
+
+import butterknife.ButterKnife;
 
 /**
  * @ 创建时间: 2017/6/13 on 15:40.
@@ -15,8 +21,10 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         //得到布局文件
         setContentView(getLayoutId());
+        ButterKnife.bind(this);
 
         //初始化View
         initView();
@@ -24,8 +32,20 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         //初始化界面数据
         initData();
 
+        registComBtn();
+
         //绑定监听器与适配器
         initListener();
+    }
+
+    /**
+     * 注册共有控件
+     */
+    final void registComBtn() {
+        View btn_back = findViewById(R.id.btn_back);
+        if (btn_back != null) {
+            btn_back.setOnClickListener(this);
+        }
     }
 
     /**
@@ -59,6 +79,9 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btn_back:
+                onBackPressed();
+                break;
             default:
                 processClick(v);
                 break;

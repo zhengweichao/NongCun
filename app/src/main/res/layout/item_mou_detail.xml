@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tv_detail_item_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:background="#e3e3e4"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="香蕉"
+        android:textColor="#000"
+        android:textSize="16dp" />
+
+</RelativeLayout>

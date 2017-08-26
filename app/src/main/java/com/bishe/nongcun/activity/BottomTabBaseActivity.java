@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.view.BottomTabView;
@@ -14,11 +15,10 @@ import com.stephentuso.welcome.WelcomeHelper;
 
 import java.util.List;
 
-
 /**
- * Created by 陈序员 on 2017/4/27.
- * Email: Matthew_Chen_1994@163.com
- * Blog: https://blog.ifmvo.cn
+ * @ 创建时间: 2017/6/19 on 15:40.
+ * @ 描述：底部标签基类
+ * @ 作者: 郑卫超 QQ: 2318723605
  */
 
 public abstract class BottomTabBaseActivity extends AppCompatActivity {
@@ -27,9 +27,11 @@ public abstract class BottomTabBaseActivity extends AppCompatActivity {
     BottomTabView bottomTabView;
     FragmentPagerAdapter adapter;
     WelcomeHelper welcomeScreen;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.activity_base_bottom_tab);
 
         welcomeScreen = new WelcomeHelper(this, VWelcomeActivity.class);
@@ -52,9 +54,9 @@ public abstract class BottomTabBaseActivity extends AppCompatActivity {
 
         viewPager.setAdapter(adapter);
 
-        if (getCenterView() == null){
+        if (getCenterView() == null) {
             bottomTabView.setTabItemViews(getTabViews());
-        }else {
+        } else {
             bottomTabView.setTabItemViews(getTabViews(), getCenterView());
         }
 
@@ -63,9 +65,10 @@ public abstract class BottomTabBaseActivity extends AppCompatActivity {
     }
 
     protected abstract List<BottomTabView.TabItemView> getTabViews();
+
     protected abstract List<Fragment> getFragments();
 
-    protected View getCenterView(){
+    protected View getCenterView() {
         return null;
     }
 

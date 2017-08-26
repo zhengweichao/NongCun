@@ -3,6 +3,11 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
+
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+
     defaultConfig {
         applicationId "com.bishe.nongcun"
         minSdkVersion 19
@@ -25,6 +30,26 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+    //以下SDK开发者请根据需要自行选择
+    //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务，以下是最新的bmob-sdk:
+    //3.5.5：请务必查看下面注释[1]
+
+    //bmob-push：Bmob的推送包
+
+    //bmob-im：Bmob的即时通讯包，注意每个版本的im依赖特定版本的bmob-sdk，具体的依赖关系可查看下面注释[2]
+
+    //bmob-sms ：Bmob单独为短信服务提供的包
+
+    //如果你想应用能够兼容Android6.0，请添加此依赖(org.apache.http.legacy.jar)
+
+    //    compile 'cn.bmob.android:bmob-push:0.8'
+
+//    compile 'cn.bmob.android:bmob-im:2.0.5@aar'
+//    compile 'cn.bmob.android:bmob-sms:1.0.1'
+
+//    compile 'cn.bmob.android:http-legacy:1.0'
+    compile 'cn.bmob.android:bmob-sdk:3.5.5'
+    compile 'com.youth.banner:banner:1.4.9'
     compile 'cn.hugeterry.coordinatortablayout:coordinatortablayout:1.0.5'
     compile 'xyz.zpayh:sherlockadapter:1.0.8'
     compile 'com.facebook.fresco:fresco:1.2.0'
@@ -33,12 +58,13 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.jakewharton:butterknife:7.0.1'
-
     compile 'com.lzy.net:okgo:2.1.4'
     compile 'com.lzy.net:okrx:0.1.2'
     compile 'com.lzy.net:okserver:1.1.3'
+    compile 'com.lzy.widget:imagepicker:0.5.5'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.google.code.gson:gson:2.8.1'
-
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 }

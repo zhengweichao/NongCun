@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <!--<include layout="@layout/layout_title_bar" />-->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/buy_tips"
+                android:textColor="#f00"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/buy_name" />
+
+            <EditText
+                android:id="@+id/et_push_wantbuy_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/et_bg"
+                android:hint="@string/push_title"
+                android:padding="6dp"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/tv_select_mou_buy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:background="@drawable/et_bg"
+                android:padding="6dp"
+                android:text="@string/select_mou"
+                android:textSize="17sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/buy_count" />
+
+            <EditText
+                android:id="@+id/et_push_wantbuy_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/et_bg"
+                android:gravity="top"
+                android:hint="@string/buy_count"
+                android:padding="5dp"
+                android:textSize="17sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/your_ask" />
+
+            <EditText
+                android:id="@+id/et_push_wantbuy_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/et_bg"
+                android:gravity="top"
+                android:hint="@string/your_ask_detail"
+                android:lines="5"
+                android:padding="5dp"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/bt_push_enter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="#fe9816"
+                android:text="@string/click_push" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

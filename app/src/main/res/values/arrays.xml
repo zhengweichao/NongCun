@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="kinds">
+        <item>全部</item>
+        <item>庭院菜</item>
+        <item>大棚菜</item>
+        <item>粮油</item>
+        <item>水果</item>
+        <item>采摘</item>
+        <item>蛋类</item>
+        <item>菜地承包</item>
+        <item>农家院</item>
+    </string-array>
+
+    <string-array name="areas">
+        <item>全国</item>
+        <item>北京</item>
+        <item>河北</item>
+        <item>山西</item>
+        <item>山东</item>
+        <item>河南</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>c语言</item>
+        <item>java </item>
+        <item>php</item>
+        <item>xml</item>
+        <item>html</item>
+    </string-array>
+</resources>

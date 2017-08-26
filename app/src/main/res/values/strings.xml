@@ -80,6 +80,8 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+
+    <!--登录注册页面-->
     <string name="login_username_error">请输入有效账号</string>
     <string name="login_password_error">请输入密码</string>
     <string name="password">密码</string>
@@ -90,7 +92,50 @@
     <string name="login">登录</string>
     <string name="jump_login">已有账号？马上登陆</string>
     <string name="jump_signup">没有账号？创建一个</string>
+    <!--发布页面-->
+    <string name="push_title">信息标题</string>
+    <string name="select_mou_tip">请点击选择分类</string>
+    <string name="select_mou">请点击选择分类</string>
+    <string name="desc_push_sale">请认真填写产品介绍，才能让更多的客户联系您</string>
+    <string name="push_pic">上传图片</string>
+    <string name="push_price">产品价格</string>
+    <string name="yuan">元</string>
+    <string name="click_push">确认发布</string>
+    <string name="buy_tips">请认真填写下表，提交您的求购信息。我们讲免费帮您寻找物美价廉的货源。</string>
+    <string name="buy_name">产品采购名称</string>
+    <string name="buy_count">采购数量</string>
+    <string name="your_ask">您的要求</string>
+    <string name="your_ask_detail">请尽可能详细地填写您的求购需求</string>
 
+    <!--关于页面-->
+    <string name="app_agreement_title">用户协议</string>
+    <string name="app_agreement">
+        请您在使用本软件前仔细阅读如下条款。包括免除或者限制作者责任的免责条款及对用户的权利限制。
+        您的安装使用行为将视为对本《协议》的接受，并同意接受本《协议》各项条款的约束。
+        \n \n 一、本《协议》授予您下列权利：\n " "您可安装无限制数量的本软件产品来使用。
+        您可以复制、分发和传播无限制数量的软件产品，但您必须保证每一份复制、分发和传播都必须是完整和真实的，
+        包括所有有关本软件产品的软件、版权、亦包括本协议。\n \n 二、用户无权实施包括但不限于下列行为：\n
+        " "不得通过反编译等手段任意修改本软件的代码并随意传播（目的仅是开发爱好者用于交流的除外），
+        任何对于本软件修改的公开发布，均必须由本软件作者完成。本软件作者保留对侵权行为采取法律允许的措施的权利。\n
+        用户不得利用本软件误导、欺骗他人。\n
+        \n 三、本软件以学习交流为目的，承诺不会有以下（包括但不局限于）获取您的隐私或产生费用的行为，请您放心使用!:)\n
+        1、发送短信;\n
+        2、拨打电话;\n
+        3、监听通话;\n
+        4、获取通话状态;\n
+        5、读取短信记录;\n
+        \n 四、 免责声明\n
+        任何使用盗版软件造成的问题均与本软件作者无关。\n
+    如果您在使用时遇到任何问题，或者对本软件的代码有任何优化意见，欢迎联系本软件的作者:xxx
+    软件名:城农通APP \n 作者：XXX \n 指导老师：XX\n</string>
+    <string name="app_about_title">关于信息</string>
+    <string name="app_about">本软件为XXX毕业设计\n指导老师是XXX.</string>
+    <string name="app_version">版本：1.0</string>
+
+    <!--主页面-->
+    <string name="new_buy">最新求购</string>
+    <string name="more">更多</string>
+    <string name="phone_call">电话咨询</string>
 
 
 </resources>

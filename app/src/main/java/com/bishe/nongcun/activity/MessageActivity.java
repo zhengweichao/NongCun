@@ -1,13 +1,12 @@
 package com.bishe.nongcun.activity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.bishe.nongcun.CONFIG;
+import com.bishe.nongcun.utils.CONFIG;
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.adapter.MessageAdapter;
 import com.bishe.nongcun.bean.Message;
@@ -21,7 +20,7 @@ import java.util.Date;
 
 /**
  * 创建日期:2016/12/9 on 23:04
- * 描述:
+ * 描述:消息页面
  * 作者:郭士超
  * QQ:1169380200
  */
@@ -40,7 +39,7 @@ public class MessageActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.aty_message);
+        setContentView(R.layout.activity_message);
 
         ListView lvMessage = (ListView) findViewById(R.id.lvMessage);
         edtSend = (EditText) findViewById(R.id.edtSend);

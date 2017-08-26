@@ -2,8 +2,6 @@ package com.bishe.nongcun.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bishe.nongcun.CONFIG;
+import com.bishe.nongcun.utils.CONFIG;
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.bean.JsonSignupBean;
 import com.google.gson.Gson;
@@ -19,10 +17,12 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Response;
 
+/**
+ * 注册页面
+ */
 public class SignupActivity extends BaseActivity {
     private static final String TAG = "SignupActivity";
 
@@ -42,11 +42,6 @@ public class SignupActivity extends BaseActivity {
     @Override
     int getLayoutId() {
         return R.layout.activity_signup;
-    }
-
-    @Override
-    void initView() {
-        ButterKnife.bind(this);
     }
 
     @Override
@@ -147,7 +142,7 @@ public class SignupActivity extends BaseActivity {
         setResult(RESULT_OK, null);
 
         Toast.makeText(SignupActivity.this, "注册成功，已自动登录", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(SignupActivity.this, TestBottomTabBaseActivity.class);
+        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
         startActivity(intent);
 
         finish();

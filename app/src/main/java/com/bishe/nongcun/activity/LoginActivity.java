@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bishe.nongcun.CONFIG;
+import com.bishe.nongcun.utils.CONFIG;
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.bean.JsonLoginBean;
 import com.google.gson.Gson;
@@ -17,7 +17,6 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -35,11 +34,6 @@ public class LoginActivity extends BaseActivity {
     TextView _signupLink;
 
     @Override
-    void initView() {
-        ButterKnife.bind(this);
-    }
-
-    @Override
     int getLayoutId() {
         return R.layout.activity_login;
     }
@@ -52,7 +46,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     void processClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_login:
                 login();
                 break;
@@ -84,7 +78,7 @@ public class LoginActivity extends BaseActivity {
         progressDialog.setMessage("登录中...");
         progressDialog.show();
 
-//获取输入内容
+        //获取输入内容
         String username = et_username.getText().toString().trim();
         String password = et_password.getText().toString().trim();
         //联网，获取数据
@@ -131,7 +125,7 @@ public class LoginActivity extends BaseActivity {
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
-        Intent intent = new Intent(LoginActivity.this, TestBottomTabBaseActivity.class);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
