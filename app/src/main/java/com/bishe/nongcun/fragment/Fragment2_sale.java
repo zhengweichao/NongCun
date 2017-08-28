@@ -196,6 +196,7 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
                                     if (e == null) {
                                         Toast.makeText(mActivity, "创建数据成功", Toast.LENGTH_SHORT).show();
                                         LogUtils.e("创建数据成功：" + objectId);
+                                        initNull();
                                         Intent intent = new Intent(mActivity, OKActivity.class);
                                         startActivity(intent);
 //                                        showOkDialog();

@@ -37,24 +37,26 @@
             android:textSize="18sp" />
 
         <LinearLayout
-            android:layout_marginTop="15dp"
             android:layout_width="match_parent"
-            android:gravity="center"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_my_wantbuy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:background="@drawable/select_button0"
                 android:text="我的求购" />
 
             <Button
                 android:id="@+id/btn_btn_my_price"
-                android:background="@drawable/select_button0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/select_button0"
                 android:text="我的报价" />
         </LinearLayout>
 

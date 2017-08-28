@@ -20,7 +20,8 @@
         <RadioButton
             android:id="@+id/rbtn_pifa"
             style="@style/radiobuttonmy"
-            android:text="批发" />
+            android:text="批发"
+            android:visibility="gone" />
 
         <RadioButton
             android:id="@+id/rbtn_qiugou"
@@ -35,7 +36,8 @@
         <RadioButton
             android:id="@+id/rbtn_news"
             style="@style/radiobuttonmy"
-            android:text="资讯" />
+            android:text="资讯"
+            android:visibility="gone" />
     </RadioGroup>
 
     <LinearLayout
@@ -58,12 +60,12 @@
             android:entries="@array/areas" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/lv_foods"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_foods_all"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
 
 </LinearLayout>

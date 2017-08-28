@@ -55,7 +55,7 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/tv_info_school_id"
+            android:id="@+id/tv_info_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="4dp"
@@ -63,7 +63,7 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/tv_info_user_id"
+            android:id="@+id/tv_info_tel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="4dp"
@@ -71,7 +71,8 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/tv_info_gender"
+            android:visibility="gone"
+            android:id="@+id/tv_info_sex"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="4dp"
@@ -79,7 +80,7 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/tv_info_type"
+            android:id="@+id/tv_info_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="4dp"

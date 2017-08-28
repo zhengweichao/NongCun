@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.activity.AboutActivity;
 import com.bishe.nongcun.activity.MessageActivity;
+import com.bishe.nongcun.activity.MyPushActivity;
+import com.bishe.nongcun.activity.MySaleActivity;
 import com.bishe.nongcun.adapter.KeyValueAdapter;
 import com.bishe.nongcun.bean.KeyValue;
 
@@ -56,8 +58,6 @@ public class Fragment4_my extends BaseFragment {
         kvScreenList.clear();
         KeyValue f = new KeyValue("个人信息", "");
         kvScreenList.add(f);
-        KeyValue s = new KeyValue("实名认证", "");
-        kvScreenList.add(s);
         KeyValue c = new KeyValue("我的消息", "");
         kvScreenList.add(c);
     }
@@ -79,28 +79,30 @@ public class Fragment4_my extends BaseFragment {
         lvScreen.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
+                Intent intent = null;
                 switch (position) {
                     case 0:
                         // TODO: 2017/8/3 个人信息
+                        intent = new Intent(mActivity, MessageActivity.class);
+
                         break;
                     case 1:
-                        // TODO: 2017/8/3 实名认证
-                        break;
-                    case 2:
                         //TODO 跳转到我的消息页面
-                        Intent intent = new Intent(mActivity, MessageActivity.class);
-                        startActivity(intent);
+                        intent = new Intent(mActivity, MessageActivity.class);
                         break;
                     default:
                         break;
                 }
+
+                startActivity(intent);
+
             }
         });
 
         lvOther.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent intent = null;
                 switch (position) {
                     case 0:
 //                        供应消息
@@ -112,11 +114,13 @@ public class Fragment4_my extends BaseFragment {
                         break;
                     case 2:
 //                        供应配置
-
+                        intent = new Intent(mActivity, MySaleActivity.class);
+                        startActivity(intent);
                         break;
                     case 3:
 //                        求购配置
-
+                        intent = new Intent(mActivity, MyPushActivity.class);
+                        startActivity(intent);
                         break;
                     case 4:
 //                        检查更新
@@ -125,10 +129,12 @@ public class Fragment4_my extends BaseFragment {
                     case 5:
 //                        跳转到关于页面
                         startActivity(new Intent(mActivity, AboutActivity.class));
+                        startActivity(intent);
                         break;
                     default:
                         break;
                 }
+
             }
         });
     }

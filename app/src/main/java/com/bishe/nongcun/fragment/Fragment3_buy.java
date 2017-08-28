@@ -72,20 +72,6 @@ public class Fragment3_buy extends BaseFragment {
         });
     }
 
-    private void showOkDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(mActivity)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        initView();
-                    }
-                })
-                .setMessage("您已经添加成功")
-                .create();
-        dialog.show();
-    }
-
     @Override
     public void initListener() {
         bt_push_enter.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +110,7 @@ public class Fragment3_buy extends BaseFragment {
                         if (e == null) {
                             Toast.makeText(mActivity, "创建数据成功", Toast.LENGTH_SHORT).show();
                             LogUtils.e("创建数据成功：" + objectId);
+                            initNull();
 //                            showOkDialog();
                             Intent intent = new Intent(mActivity, OKActivity.class);
                             startActivity(intent);
@@ -137,5 +124,11 @@ public class Fragment3_buy extends BaseFragment {
             }
         });
 
+    }
+
+    private void initNull() {
+        et_content.setText("");
+        et_title.setText("");
+        et_count.setText("");
     }
 }

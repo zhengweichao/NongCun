@@ -3,9 +3,16 @@ package com.bishe.nongcun;
 import android.app.Application;
 
 import com.bishe.nongcun.imageloader.PicassoImageLoader;
+import com.bishe.nongcun.net.DemoMessageHandler;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.view.CropImageView;
 import com.lzy.okgo.OkGo;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
+import cn.bmob.newim.BmobIM;
 
 /**
  * @ 创建时间: 2017/6/10 on 17:36.
@@ -33,9 +40,29 @@ public class MyApplication extends Application {
         imagePicker.setFocusHeight(800);  //裁剪框的高度。单位像素（圆形自动取宽高最小值）
         imagePicker.setOutPutX(1000);//保存文件的宽度。单位像素
         imagePicker.setOutPutY(1000);//保存文件的高度。单位像素
-
+        if (getApplicationInfo().packageName.equals(getMyProcessName())) {
+            BmobIM.init(this);
+            BmobIM.registerDefaultMessageHandler(new DemoMessageHandler());
+        }
 
     }
 
+    /**
+     * 获取当前运行的进程名
+     *
+     * @return
+     */
+    public static String getMyProcessName() {
+        try {
+            File file = new File("/proc/" + android.os.Process.myPid() + "/" + "cmdline");
+            BufferedReader mBufferedReader = new BufferedReader(new FileReader(file));
+            String processName = mBufferedReader.readLine().trim();
+            mBufferedReader.close();
+            return processName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }

@@ -1,16 +1,15 @@
 package com.bishe.nongcun.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.bishe.nongcun.R;
-
-import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,8 +30,9 @@ public class FoodsActivity extends BaseActivity {
     Spinner spinner2;
     @Bind(R.id.spinner3)
     Spinner spinner3;
-    @Bind(R.id.lv_foods)
-    ListView lvFoods;
+    @Bind(R.id.rv_foods_all)
+    RecyclerView rvFoodsAll;
+
 
     @Override
     int getLayoutId() {
@@ -46,7 +46,7 @@ public class FoodsActivity extends BaseActivity {
 
     @Override
     void initData() {
-
+        rvFoodsAll.setLayoutManager(new LinearLayoutManager(FoodsActivity.this));
     }
 
     @Override
@@ -76,4 +76,6 @@ public class FoodsActivity extends BaseActivity {
         });
 
     }
+
+
 }

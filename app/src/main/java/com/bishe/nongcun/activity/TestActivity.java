@@ -2,25 +2,21 @@ package com.bishe.nongcun.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.bean.MyUser;
-import com.bishe.nongcun.bean.WantBuyItem;
-import com.bishe.nongcun.bean.user_info;
 import com.bishe.nongcun.utils.LogUtils;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cn.bmob.v3.BmobQuery;
+import cn.bmob.newim.BmobIM;
+import cn.bmob.newim.bean.BmobIMConversation;
+import cn.bmob.newim.listener.ConnectListener;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 
 public class TestActivity extends Activity {
@@ -34,7 +30,26 @@ public class TestActivity extends Activity {
         setContentView(R.layout.activity_test);
         ButterKnife.bind(this);
 
-        //注册
+
+//TODO 连接：3.1、登录成功、注册成功或处于登录状态重新打开应用后执行连接IM服务器的操作
+        MyUser user = BmobUser.getCurrentUser(MyUser.class);
+
+        if (!TextUtils.isEmpty(user.getObjectId())) {
+            BmobIM.connect(user.getObjectId(), new ConnectListener() {
+                @Override
+                public void done(String uid, BmobException e) {
+                    if (e == null) {
+                        //连接成功
+                    } else {
+                        //连接失败
+//                        toast(e.getMessage());
+                    }
+                }
+            });
+        }
+//        BmobIMConversation conversationEntrance = BmobIM.getInstance().startPrivateConversation(info, null);
+
+        /*//注册
         MyUser bu = new MyUser();
         bu.setUsername("004");
         bu.setPassword("123");
@@ -52,35 +67,7 @@ public class TestActivity extends Activity {
                     LogUtils.e(e + "");
                 }
             }
-        });
-
-
-
-        /*BmobQuery<user_info> query = new BmobQuery<user_info>();
-        query.getObject("R6mODDDQ", new QueryListener<user_info>() {
-
-            @Override
-            public void done(user_info object, BmobException e) {
-                if (e == null) {
-                    //获得playerName的信息
-                    object.getUsername();
-                    //获得数据的objectId信息
-                    object.getObjectId();
-                    //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
-                    object.getCreatedAt();
-                    object.getPassword();
-                    object.getIsreal();
-                    object.getTel();
-                    aaa.setText(object.getUsername() + "====" + object.getPassword());
-
-                } else {
-                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                }
-            }
-
-
         });*/
-
 
     }
 }
