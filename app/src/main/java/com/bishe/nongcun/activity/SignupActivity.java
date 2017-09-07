@@ -2,6 +2,8 @@ package com.bishe.nongcun.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -9,16 +11,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bishe.nongcun.utils.CONFIG;
 import com.bishe.nongcun.R;
-import com.bishe.nongcun.bean.JsonSignupBean;
-import com.google.gson.Gson;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
+import com.bishe.nongcun.bean.MyUser;
+import com.bishe.nongcun.utils.LogUtils;
 
 import butterknife.Bind;
-import okhttp3.Call;
-import okhttp3.Response;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cn.bmob.v3.BmobSMS;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * 注册页面
@@ -38,6 +41,10 @@ public class SignupActivity extends BaseActivity {
     Button _signupButton;
     @Bind(R.id.link_login)
     TextView _loginLink;
+    @Bind(R.id.input_yanzheng)
+    EditText inputYanzheng;
+    @Bind(R.id.btn_getcode)
+    Button btnGetcode;
 
     @Override
     int getLayoutId() {
@@ -70,9 +77,16 @@ public class SignupActivity extends BaseActivity {
     public void signup() {
         Log.d(TAG, "Signup");
 
+        String code = inputYanzheng.getText().toString();
         if (!validate()) {
             onSignupFailed();
             return;
+        }
+        if (code.isEmpty()) {
+            inputYanzheng.setError("请输入验证码");
+            return;
+        } else {
+            inputYanzheng.setError(null);
         }
 
         _signupButton.setEnabled(false);
@@ -86,41 +100,45 @@ public class SignupActivity extends BaseActivity {
         String username = _nameText.getText().toString();
         String mobile = _mobileText.getText().toString();
         String password = _passwordText.getText().toString();
-        String reEnterPassword = _reEnterPasswordText.getText().toString();
 
-        // TODO: Implement your own signup logic here.
-//
-//        new android.os.Handler().postDelayed(
-//                new Runnable() {
-//                    public void run() {
-//                        // depending on success
-//                        // TODO: 2017/5/22 注册成功
-//                        onSignupSuccess();
-//                        // onSignupFailed();
-//                        progressDialog.dismiss();
-//                    }
-//                }, 3000);
-        OkGo.get(CONFIG.URL_SIGNUP)
-                .params("username", username)
-                .params("password", password)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
-                        Gson gson = new Gson();
-                        JsonSignupBean jsonSignupBean = gson.fromJson(s, JsonSignupBean.class);
-                        //如果得到返回消息为ok,则注册成功。
-                        if (jsonSignupBean.getMsg().equals("ok")) {
-                            Log.e("zwc", "onSuccess: 注册成功");
-                            onSignupSuccess();
-                            //对话框消失
-                            progressDialog.dismiss();
+        MyUser bu = new MyUser();
+        bu.setUsername(username);
+        bu.setPassword(password);
+        bu.setMobilePhoneNumber(mobile);
+        //注意：不能用save方法进行注册
+        /*bu.signUp(new SaveListener<MyUser>() {
+            @Override
+            public void done(MyUser s, BmobException e) {
+                if (e == null) {
+                    LogUtils.e("注册成功");
+                    onSignupSuccess();
+                    //对话框消失
+                    progressDialog.dismiss();
+                } else {
+                    LogUtils.e("注册失败");
+                    onSignupFailed(1);
+                    progressDialog.dismiss();
+                }
+            }
+        });*/
+        bu.signOrLogin(code, new SaveListener<MyUser>() {
+            @Override
+            public void done(MyUser user, BmobException e) {
+                if (e == null) {
+                    LogUtils.e("注册成功" + user.getUsername() + "-" + user.getMobilePhoneNumber() + "-" + user.getObjectId());
+                    onSignupSuccess();
+                    //对话框消失
+                    progressDialog.dismiss();
+                } else {
+                    LogUtils.e("注册失败" + e.getMessage());
+                    onSignupFailed(1);
+                    progressDialog.dismiss();
+                }
 
-                        } else {
-                            onSignupFailed(1);
-                            progressDialog.dismiss();
-                        }
-                    }
-                });
+            }
+
+        });
+
 
     }
 
@@ -161,6 +179,7 @@ public class SignupActivity extends BaseActivity {
         String mobile = _mobileText.getText().toString();
         String password = _passwordText.getText().toString();
         String reEnterPassword = _reEnterPasswordText.getText().toString();
+        String code = inputYanzheng.getText().toString();
 
         if (name.isEmpty()) {
             _nameText.setError("请输入用户名");
@@ -183,6 +202,7 @@ public class SignupActivity extends BaseActivity {
             _passwordText.setError(null);
         }
 
+
         if (reEnterPassword.isEmpty() || !(reEnterPassword.equals(password))) {
             _reEnterPasswordText.setError("两次密码输入不一致");
             valid = false;
@@ -191,5 +211,46 @@ public class SignupActivity extends BaseActivity {
         }
 
         return valid;
+    }
+
+    private CountDownTimer countDownTimer = new CountDownTimer(6800, 1000) {
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            btnGetcode.setText(millisUntilFinished / 1000 + "秒后可以重新获取");
+        }
+
+        @Override
+        public void onFinish() {
+            btnGetcode.setText("获取验证码");
+            btnGetcode.setEnabled(true);
+        }
+    };
+
+    @OnClick(R.id.btn_getcode)
+    public void onViewClicked() {
+        btnGetcode.setEnabled(false);
+        if (!validate()) {
+            Toast.makeText(this, "信息不完善！", Toast.LENGTH_SHORT).show();
+            btnGetcode.setEnabled(true);
+            return;
+        }
+        countDownTimer.start();
+        String username = _nameText.getText().toString();
+        String mobile = _mobileText.getText().toString();
+        String password = _passwordText.getText().toString();
+
+        // TODO: 2017/9/7 获取验证码
+        BmobSMS.requestSMSCode(mobile, "城农通", new QueryListener<Integer>() {
+            @Override
+            public void done(Integer smsId, BmobException ex) {
+                if (ex == null) {//验证码发送成功
+                    LogUtils.e("验证码发送成功,短信id：" + smsId);//用于查询本次短信发送详情
+                    Toast.makeText(SignupActivity.this, "验证码已发送，请注意查收", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
     }
 }

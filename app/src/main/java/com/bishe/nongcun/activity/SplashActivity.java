@@ -10,13 +10,14 @@ import com.bishe.nongcun.R;
 
 import butterknife.Bind;
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobUser;
 
 
 public class SplashActivity extends BaseActivity {
 
     @Bind(R.id.sp_jump_btn)
     Button btn_splash_jump;
-    private CountDownTimer countDownTimer = new CountDownTimer(200, 100) {
+    private CountDownTimer countDownTimer = new CountDownTimer(1100, 1000) {
 
         @Override
         public void onTick(long millisUntilFinished) {
@@ -30,11 +31,17 @@ public class SplashActivity extends BaseActivity {
             goLoginActivity();
         }
     };
+    private Intent intent;
 
     private void goLoginActivity() {
+
+        BmobUser user = BmobUser.getCurrentUser();
+        if (user == null) {
+            intent = new Intent(SplashActivity.this, LoginActivity.class);
+        } else {
+            intent = new Intent(SplashActivity.this, MainActivity.class);
+        }
         //直接跳转主页面
-//        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }

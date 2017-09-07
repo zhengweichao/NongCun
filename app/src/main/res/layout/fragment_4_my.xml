@@ -11,7 +11,7 @@
         android:id="@+id/lvScreen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="13dp"
         android:background="@color/white">
     </ListView>
 
@@ -26,5 +26,12 @@
     </ListView>
 
     <LinearLayout style="@style/common_horizontal_division_line_style" />
+    <Button
+        android:id="@+id/btn_my_logout"
+        style="@style/style_button_logout"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="16dp"
+        android:text="@string/logout" />
 
 </LinearLayout>

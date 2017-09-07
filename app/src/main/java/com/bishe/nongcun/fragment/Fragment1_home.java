@@ -10,29 +10,22 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.activity.FoodDetailActivity;
 import com.bishe.nongcun.activity.FoodsActivity;
-import com.bishe.nongcun.activity.MainActivity;
 import com.bishe.nongcun.activity.MouDetailActivity;
-import com.bishe.nongcun.activity.ShopListActivity;
-import com.bishe.nongcun.activity.TestActivity;
-import com.bishe.nongcun.activity.WXdemoActivity;
 import com.bishe.nongcun.activity.WantBuyDetailActivity;
 import com.bishe.nongcun.adapter.MainNewsBuyAdapter;
 import com.bishe.nongcun.adapter.MainNewsPriceAdapter;
 import com.bishe.nongcun.adapter.MoudleAdapter;
-import com.bishe.nongcun.bean.MainNewsPrice;
 import com.bishe.nongcun.bean.MoudleItem;
 import com.bishe.nongcun.bean.PriceItem;
 import com.bishe.nongcun.bean.WantBuyItem;
+import com.bishe.nongcun.ui.MainActivity;
 import com.bishe.nongcun.utils.LogUtils;
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.bean.ImageItem;
-import com.lzy.imagepicker.ui.ImageGridActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,15 +41,14 @@ import xyz.zpayh.adapter.OnItemClickListener;
  */
 
 public class Fragment1_home extends BaseFragment {
-    private static final int IMAGE_PICKER = 1;
     ArrayList<IMultiItem> data;
     String[] MoudleName = {"庭院菜", "大棚菜", "粮油", "水果",
             "采摘", "蛋类", "菜地承包", "农家院"
     };
     int[] MoudleLogo = {R.mipmap.shucai, R.mipmap.shuiguo, R.mipmap.yangzhi, R.mipmap.liangyou,
             R.mipmap.miaomu, R.mipmap.zhongyao, R.mipmap.nongzi, R.mipmap.nongji};
-    Class[] clazz = {MouDetailActivity.class, MouDetailActivity.class, MouDetailActivity.class, FoodDetailActivity.class,
-            WXdemoActivity.class, TestActivity.class, MainActivity.class, MainActivity.class
+    Class[] clazz = {MouDetailActivity.class, MouDetailActivity.class, MouDetailActivity.class, MouDetailActivity.class,
+            MouDetailActivity.class, MouDetailActivity.class, MouDetailActivity.class, MainActivity.class
     };
     private MoudleAdapter moudleAdapter;
     private RecyclerView mRecyclerView;
@@ -69,8 +61,9 @@ public class Fragment1_home extends BaseFragment {
     private ArrayList<PriceItem> mainNewsesdataPrice;
     private ArrayList<WantBuyItem> mainNewsesdataBuy;
     private MainNewsBuyAdapter mainNewsBuyAdapter;
-    private TextView bt_main_more_buy;
-    private TextView bt_main_more_price;
+    private TextView tv_more_buy;
+    private TextView tv_more_price;
+    private Button btn_look_all;
 
     @Override
     protected View initView() {
@@ -79,9 +72,9 @@ public class Fragment1_home extends BaseFragment {
         mRecyclerView = (RecyclerView) inflate.findViewById(R.id.rv_main);
         rv_main_newbuy = (RecyclerView) inflate.findViewById(R.id.rv_main_newbuy);
         rv_main_newprice = (RecyclerView) inflate.findViewById(R.id.rv_main_newprice);
-        bt_main_more_buy = (TextView) inflate.findViewById(R.id.bt_main_more_buy);
-        bt_main_more_price = (TextView) inflate.findViewById(R.id.bt_main_more_price);
-
+        tv_more_buy = (TextView) inflate.findViewById(R.id.bt_main_more_buy);
+        tv_more_price = (TextView) inflate.findViewById(R.id.bt_main_more_price);
+        btn_look_all = (Button) inflate.findViewById(R.id.btn_main_look_all);
         return inflate;
     }
 
@@ -110,18 +103,11 @@ public class Fragment1_home extends BaseFragment {
         iniNewsSaleData();
         initNewsBuyData();
 
-       /* for (int i = 0; i < 6; i++) {
-            MainNewsPrice mainNewsPrice = new MainNewsPrice("硬粉", "0.90元/斤", "05月21日", "山东临沂");
-
-            mainNewsesdataPrice.add(mainNewsPrice);
-        }*/
-
         //新建适配器
         moudleAdapter = new MoudleAdapter();
         mainNewsPriceAdapter = new MainNewsPriceAdapter();
 
         //绑定数据
-
         moudleAdapter.setData(data);
 
     }
@@ -177,7 +163,7 @@ public class Fragment1_home extends BaseFragment {
 
                     }
                     mainNewsBuyAdapter.setData(mainNewsesdataBuy);
-                    rv_main_newbuy.setAdapter(mainNewsBuyAdapter);
+
                 } else {
                     Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
                 }
@@ -188,6 +174,14 @@ public class Fragment1_home extends BaseFragment {
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
     public void initListener() {
+        btn_look_all.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity,FoodsActivity.class);
+                startActivity(intent);
+            }
+        });
+
 //        顶部分类项目===》跳转
         moudleAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -208,7 +202,7 @@ public class Fragment1_home extends BaseFragment {
             @Override
             public void onItemClick(@NonNull View view, int adapterPosition) {
                 Intent intent = new Intent(mActivity, FoodDetailActivity.class);
-                intent.putExtra("newprice",mainNewsesdataPrice.get(adapterPosition));
+                intent.putExtra("newprice", mainNewsesdataPrice.get(adapterPosition));
                 startActivity(intent);
             }
         });
@@ -225,42 +219,31 @@ public class Fragment1_home extends BaseFragment {
 
 //      设置适配器
         mRecyclerView.setAdapter(moudleAdapter);
-
+        rv_main_newbuy.setAdapter(mainNewsBuyAdapter);
         rv_main_newprice.setAdapter(mainNewsPriceAdapter);
 
         //        更多求购====》跳转
-        bt_main_more_buy.setOnClickListener(new View.OnClickListener() {
+        tv_more_buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(mActivity, FoodsActivity.class);
+                intent.putExtra("item","wantbuy");
                 startActivity(intent);
             }
         });
-//        更多报价===》跳转
-        bt_main_more_price.setOnClickListener(new View.OnClickListener() {
+        //        更多报价===》跳转
+        tv_more_price.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mActivity, ImageGridActivity.class);
-                startActivityForResult(intent, IMAGE_PICKER);
+                Intent intent = new Intent(mActivity, FoodsActivity.class);
+                intent.putExtra("item","price");
+                startActivity(intent);
 
             }
         });
 
 
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
-            if (data != null && requestCode == IMAGE_PICKER) {
-                ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-//                MyAdapter adapter = new MyAdapter(images);
-//                gridView.setAdapter(adapter);
-            } else {
-                Toast.makeText(mActivity, "没有数据", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.bishe.nongcun.activity;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import com.bishe.nongcun.adapter.MoudleAdapter;
 import com.bishe.nongcun.bean.CityBean;
 import com.bishe.nongcun.bean.DetailMoudleItem;
 import com.bishe.nongcun.utils.CityData;
+import com.bishe.nongcun.utils.LogUtils;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -73,6 +75,7 @@ public class MouDetailActivity extends BaseActivity {
         }
 
         Gson gson = new Gson();
+        LogUtils.e(CityData.getJson());
         cityBean = gson.fromJson(CityData.getJson(), CityBean.class);
         String[] provinceArray = new String[cityBean.getData().size()];
         List<CityBean.Data.City> cityList = cityBean.getData().get(position).getCity();
@@ -93,16 +96,13 @@ public class MouDetailActivity extends BaseActivity {
             public void onItemClick(@NonNull View view, int adapterPosition) {
                 // TODO: 2017/7/2 各个分类点击事件
                 //携带不同信息，跳转详情页面
-//                    Intent intent = new Intent(MouDetailActivity.this, clazz);
-//                    startActivity(intent);
+                Intent intent = new Intent(MouDetailActivity.this, FoodsActivity.class);
+                intent.putExtra("select", "false");
+                intent.putExtra("kind1", tv_title.getText().toString().trim());
+                intent.putExtra("kind2", MoudleDetailName[adapterPosition]);
+                startActivity(intent);
             }
         });
         rv_detail.setAdapter(moudleAdapter);
-
-    }
-
-    @Override
-    void processClick(View v) {
-
     }
 }

@@ -1,5 +1,7 @@
 package com.bishe.nongcun.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +12,7 @@ import android.view.View;
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.adapter.MySaleAdapter;
 import com.bishe.nongcun.bean.PriceItem;
+import com.bishe.nongcun.bean.WantBuyItem;
 import com.bishe.nongcun.utils.LogUtils;
 
 import java.util.ArrayList;
@@ -20,7 +23,9 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 import xyz.zpayh.adapter.OnItemClickListener;
+import xyz.zpayh.adapter.OnItemLongClickListener;
 
 public class MySaleActivity extends BaseActivity {
 
@@ -69,6 +74,39 @@ public class MySaleActivity extends BaseActivity {
 
     }
 
+
+    @Override
+    void initListener() {
+        mySaleAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(@NonNull View view, final int adapterPosition) {
+
+                AlertDialog dialog = new AlertDialog.Builder(MySaleActivity.this)
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DelMyPush(data.get(adapterPosition).getObjectId());
+                            }
+                        })
+                        .setMessage("确定要删除么？")
+                        .setTitle("确定删除")
+                        .setIcon(R.mipmap.ic_launcher)
+                        .create();
+                dialog.show();
+
+
+                return true;
+            }
+
+        });
+    }
+
     @Override
     void initData() {
 //        最近报价条目点击跳转
@@ -82,5 +120,32 @@ public class MySaleActivity extends BaseActivity {
         });
 
     }
+
+    /**
+     * 删除发布信息
+     * @param Objectid
+     */
+    private void DelMyPush(String Objectid) {
+
+        PriceItem query = new PriceItem();
+        query.setObjectId(Objectid);
+        //返回6条数据，如果不加上这条语句，默认返回10条数据
+        //执行查询方法
+        query.delete(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+
+                if(e==null){
+                    LogUtils.e("删除成功");
+                }else{
+                    LogUtils.e("删除失败"+e);
+                }
+
+            }
+        });
+
+    }
+
+
 
 }

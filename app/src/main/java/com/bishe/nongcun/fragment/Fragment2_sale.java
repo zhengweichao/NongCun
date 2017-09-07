@@ -3,6 +3,7 @@ package com.bishe.nongcun.fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -12,12 +13,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.activity.OKActivity;
-import com.bishe.nongcun.activity.WXdemoActivity;
 import com.bishe.nongcun.adapter.ImagePickerAdapter;
 import com.bishe.nongcun.bean.MyUser;
 import com.bishe.nongcun.bean.PriceItem;
@@ -25,6 +26,7 @@ import com.bishe.nongcun.imageloader.GlideImageLoader0;
 import com.bishe.nongcun.utils.ChooseCityInterface;
 import com.bishe.nongcun.utils.ChooseCityUtil;
 import com.bishe.nongcun.utils.LogUtils;
+import com.bishe.nongcun.view.LoadDialog;
 import com.bishe.nongcun.view.SelectDialog;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -32,15 +34,17 @@ import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.ui.ImagePreviewDelActivity;
 import com.lzy.imagepicker.view.CropImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadBatchListener;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 /**
  * Created by 郑卫超 on 2017/5/3.
@@ -62,10 +66,16 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
     private String kind2;
     private String kind3;
     private EditText et_desc;
-    private EditText et_unit;
     private EditText et_title;
     private EditText et_price;
     private Button bt_enter;
+    private Spinner sp_unit;
+    private String priceUnit = "/斤";
+    private ArrayList<String> photos;
+    String[] filePaths = new String[3];
+    private String title;
+    private String price;
+    private String desc;
 
     @Override
     protected View initView() {
@@ -74,10 +84,11 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
         tvCity = (TextView) inflate.findViewById(R.id.tv_select_mou);
         RecyclerView recyclerView = (RecyclerView) inflate.findViewById(R.id.recyclerView0);
         et_desc = (EditText) inflate.findViewById(R.id.et_push_sale_desc);
-        et_unit = (EditText) inflate.findViewById(R.id.et_push_sale_peice_unit);
         et_title = (EditText) inflate.findViewById(R.id.et_push_sale_title);
         et_price = (EditText) inflate.findViewById(R.id.et_push_sale_price);
         bt_enter = (Button) inflate.findViewById(R.id.bt_push_sale_enter);
+        sp_unit = (Spinner) inflate.findViewById(R.id.sp_push_sale_unit);
+
 
         selImageList = new ArrayList<>();
         adapter = new ImagePickerAdapter(mActivity, selImageList, maxImgCount);
@@ -106,9 +117,8 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
 
     @Override
     public void initData() {
-        initWidget();
 
-//        种类选择
+        //        种类选择
         tvCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,28 +134,38 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
                         kind2 = newCityArray[1];
                         kind3 = newCityArray[2];
 
-
                     }
                 });
             }
         });
     }
 
-    private void initWidget() {
-
-    }
 
     @Override
     public void initListener() {
+        sp_unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String[] units = getResources().getStringArray(R.array.units);
+                priceUnit = units[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+        });
+
         bt_enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String desc = et_desc.getText().toString().trim();
-                final String price = et_price.getText().toString().trim();
-                final String title = et_title.getText().toString().trim();
-                final String unit = et_unit.getText().toString().trim();
 
-                if (TextUtils.isEmpty(desc) || TextUtils.isEmpty(price) || TextUtils.isEmpty(title) || TextUtils.isEmpty(unit)) {
+                desc = et_desc.getText().toString().trim();
+                price = et_price.getText().toString().trim();
+                title = et_title.getText().toString().trim();
+
+                if (TextUtils.isEmpty(desc) || TextUtils.isEmpty(price) || TextUtils.isEmpty(title)) {
                     Toast.makeText(mActivity, "请您完整地填写信息", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -155,98 +175,143 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
                     return;
                 }
 
-                if (selImageList.size()!=3){
+                if (selImageList.size() != 3) {
                     Toast.makeText(mActivity, "请选择3张图片", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                LogUtils.e("马上就要发布了……");
+                LogUtils.e("开始压缩……");
 
-                String[] filePaths = new String[3];
-
-                filePaths[0] = selImageList.get(0).path;
-                filePaths[1] = selImageList.get(1).path;
-                filePaths[2] = selImageList.get(2).path;
-                LogUtils.e(filePaths[0] + "");
-                BmobFile.uploadBatch(filePaths, new UploadBatchListener() {
-
-                    @Override
-                    public void onSuccess(List<BmobFile> files, List<String> urls) {
-                        // TODO Auto-generated method stub
-                        Log.i("life", "insertDataWithMany -onSuccess :" + urls.size() + "-----" + files + "----" + urls);
-                        if (urls.size() == 3) {//如果全部上传完，则更新该条记录
-
-                            PriceItem priceItem = new PriceItem();
-                            MyUser user = BmobUser.getCurrentUser(MyUser.class);
-                            priceItem.setAuthor(user);
-                            priceItem.setTitle(title);
-                            priceItem.setContent(desc);
-                            priceItem.setPrice(price + "/" + unit);
-                            priceItem.setKind1(kind1);
-                            priceItem.setKind2(kind2);
-                            priceItem.setKind3(kind3);
-                            priceItem.setPic1(files.get(0));
-                            priceItem.setPic2(files.get(1));
-                            priceItem.setPic3(files.get(2));
-
-                            priceItem.save(new SaveListener<String>() {
-                                @Override
-                                public void done(String objectId, BmobException e) {
-
-                                    if (e == null) {
-                                        Toast.makeText(mActivity, "创建数据成功", Toast.LENGTH_SHORT).show();
-                                        LogUtils.e("创建数据成功：" + objectId);
-                                        initNull();
-                                        Intent intent = new Intent(mActivity, OKActivity.class);
-                                        startActivity(intent);
-//                                        showOkDialog();
-                                    } else {
-                                        LogUtils.e("失败：" + e.getMessage() + "," + e.getErrorCode());
-                                    }
-                                }
-                            });
-
-                        } else {
-                            //有可能上传不完整，中间可能会存在未上传成功的情况，你可以自行处理
-                        }
-                    }
-
-                    @Override
-                    public void onError(int statuscode, String errormsg) {
-                        LogUtils.e("错误码" + statuscode + ",错误描述：" + errormsg);
-                        // TODO Auto-generated method stub
-                    }
-
-                    @Override
-                    public void onProgress(int curIndex, int curPercent, int total, int totalPercent) {
-                        Log.i("life", "insertBatchDatasWithOne -onProgress :" + curIndex + "---" + curPercent + "---" + total + "----" + totalPercent);
-                        // TODO Auto-generated method stub
-                    }
-                });
+                ArrayList<String> paths = new ArrayList<>();
+                paths.add(selImageList.get(0).path);
+                paths.add(selImageList.get(1).path);
+                paths.add(selImageList.get(2).path);
+                initLuban(paths);
 
             }
         });
 
     }
 
-    private void showOkDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(mActivity)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+    private void initLuban(List<String> paths) {
+        photos = new ArrayList<>();
+        Luban.with(mActivity)
+                .load(paths)                                   // 传入要压缩的图片列表
+                .ignoreBy(100)                                  // 忽略不压缩图片的大小
+                .setTargetDir(getPath())                        // 设置压缩后文件存储位置
+                .setCompressListener(new OnCompressListener() { //设置回调
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        initNull();
+                    public void onStart() {
+                        // TODO 压缩开始前调用，可以在方法内启动 loading UI
+                        LoadDialog.show(mActivity,"正在进行图片压缩ing……");
                     }
-                })
-                .setMessage("您已经添加成功")
-                .create();
-        dialog.show();
+
+                    @Override
+                    public void onSuccess(File file) {
+                        // TODO 压缩成功后调用，返回压缩后的图片文件
+                        LogUtils.e("压缩成功");
+                        LoadDialog.dismiss(mActivity);
+
+//                        Toast.makeText(mActivity, "压缩成功！", Toast.LENGTH_SHORT).show();
+                        photos.add(file.getAbsolutePath());
+                        if (photos.size()==3){
+                            filePaths[0]=photos.get(0) ;
+                            filePaths[1]=photos.get(1) ;
+                            filePaths[2]=photos.get(2) ;
+                            BmobUpSale();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        // TODO 当压缩过程出现问题时调用
+                        LoadDialog.dismiss(mActivity);
+                        Toast.makeText(mActivity, "压缩失败！", Toast.LENGTH_SHORT).show();
+                    }
+                }).launch();    //启动压缩
+
+    }
+
+    private void BmobUpSale() {
+        LoadDialog.show(mActivity, "发布供应中...");
+        LogUtils.e("开始上传……");
+        BmobFile.uploadBatch(filePaths, new UploadBatchListener() {
+
+            @Override
+            public void onSuccess(List<BmobFile> files, List<String> urls) {
+                // TODO Auto-generated method stub
+                Log.i("life", "insertDataWithMany -onSuccess :" + urls.size() + "-----" + files + "----" + urls);
+                if (urls.size() == 3) {//如果全部上传完，则更新该条记录
+                    PriceItem priceItem = new PriceItem();
+                    MyUser user = BmobUser.getCurrentUser(MyUser.class);
+                    priceItem.setAuthor(user);
+                    priceItem.setTitle(title);
+                    priceItem.setContent(desc);
+                    priceItem.setPrice(price + "元" + priceUnit);
+                    priceItem.setKind1(kind1);
+                    priceItem.setKind2(kind2);
+                    priceItem.setKind3(kind3);
+                    priceItem.setPic1(files.get(0));
+                    priceItem.setPic2(files.get(1));
+                    priceItem.setPic3(files.get(2));
+                    priceItem.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String objectId, BmobException e) {
+
+                            if (e == null) {
+                                LogUtils.e("上传成功……");
+                                Toast.makeText(mActivity, "创建数据成功", Toast.LENGTH_SHORT).show();
+                                LogUtils.e("创建数据成功：" + objectId);
+                                initNull();
+                                Intent intent = new Intent(mActivity, OKActivity.class);
+                                startActivity(intent);
+                                LoadDialog.dismiss(mActivity);
+                            } else {
+                                LogUtils.e("失败：" + e.getMessage() + "," + e.getErrorCode());
+                                LoadDialog.dismiss(mActivity);
+                            }
+                        }
+                    });
+
+                } else {
+                    //有可能上传不完整，中间可能会存在未上传成功的情况，你可以自行处理
+                }
+            }
+
+            @Override
+            public void onError(int statuscode, String errormsg) {
+                LogUtils.e("错误码" + statuscode + ",错误描述：" + errormsg);
+                Toast.makeText(mActivity, "发生错误，请稍后重试", Toast.LENGTH_SHORT).show();
+                // TODO Auto-generated method stub
+                LoadDialog.dismiss(mActivity);
+            }
+
+            @Override
+            public void onProgress(int curIndex, int curPercent, int total, int totalPercent) {
+                Log.i("life", "insertBatchDatasWithOne -onProgress :" + curIndex + "---" + curPercent + "---" + total + "----" + totalPercent);
+                // TODO Auto-generated method stub
+                LoadDialog.dismiss(mActivity);
+            }
+
+
+        });
+
+    }
+
+    private String getPath() {
+        String path = Environment.getExternalStorageDirectory() + "/Luban/image/";
+        File file = new File(path);
+        if (file.mkdirs()) {
+            return path;
+        }
+        return path;
     }
 
     private void initNull() {
         et_desc.setText("");
         et_title.setText("");
-        et_unit.setText("");
+//        et_unit.setText("");
         et_price.setText("");
     }
 

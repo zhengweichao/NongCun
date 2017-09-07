@@ -49,11 +49,11 @@ public class UserInfoActivity extends BaseActivity {
                 @Override
                 public void done(MyUser myUser, BmobException e) {
                     if (e == null) {
-                        tvInfoUsername.setText(myUser.getUsername());
-                        tvInfoAddress.setText(myUser.getAddress());
-                        tvInfoCreateTime.setText(myUser.getCreatedAt());
+                        tvInfoUsername.setText("用户名：" + myUser.getUsername());
+                        tvInfoAddress.setText("手机号：" + myUser.getAddress());
+                        tvInfoCreateTime.setText("创建时间：" + myUser.getCreatedAt());
                         tvInfoName.setText(myUser.getUsername());
-                        tvInfoTel.setText(myUser.getMobilePhoneNumber());
+                        tvInfoTel.setText("地址：" + myUser.getMobilePhoneNumber());
                     } else {
                         LogUtils.e("失败：" + e.getMessage() + "," + e.getErrorCode());
                     }

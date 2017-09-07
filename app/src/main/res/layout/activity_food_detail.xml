@@ -80,6 +80,18 @@
                     android:background="@drawable/select_button"
                     android:padding="5dp"
                     android:text="@string/phone_call" />
+
+                <Button
+                    android:id="@+id/bt_detail_foods_im"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/select_button"
+                    android:padding="5dp"
+                    android:text="私信联系" />
+
             </LinearLayout>
 
 

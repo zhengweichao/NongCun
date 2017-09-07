@@ -6,7 +6,6 @@
     android:orientation="vertical"
     tools:context="com.bishe.nongcun.activity.FoodsActivity">
 
-
     <include layout="@layout/layout_title_bar_back" />
 
     <RadioGroup
@@ -18,12 +17,6 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/rbtn_pifa"
-            style="@style/radiobuttonmy"
-            android:text="批发"
-            android:visibility="gone" />
-
-        <RadioButton
             android:id="@+id/rbtn_qiugou"
             style="@style/radiobuttonmy"
             android:text="求购" />
@@ -33,39 +26,11 @@
             style="@style/radiobuttonmy"
             android:text="价格" />
 
-        <RadioButton
-            android:id="@+id/rbtn_news"
-            style="@style/radiobuttonmy"
-            android:text="资讯"
-            android:visibility="gone" />
     </RadioGroup>
 
-    <LinearLayout
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_foods"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Spinner
-            android:id="@+id/spinner2"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_weight="1"
-            android:entries="@array/kinds" />
-
-        <Spinner
-            android:id="@+id/spinner3"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_weight="1"
-            android:entries="@array/areas" />
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_foods_all"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </android.support.v7.widget.RecyclerView>
-
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

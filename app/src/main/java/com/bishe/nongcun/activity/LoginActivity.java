@@ -9,14 +9,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bishe.nongcun.bean.MyUser;
 import com.bishe.nongcun.utils.CONFIG;
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.bean.JsonLoginBean;
+import com.bishe.nongcun.utils.LogUtils;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
 import butterknife.Bind;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -81,8 +85,31 @@ public class LoginActivity extends BaseActivity {
         //获取输入内容
         String username = et_username.getText().toString().trim();
         String password = et_password.getText().toString().trim();
+
         //联网，获取数据
-        OkGo.get(CONFIG.URL_LOGIN)
+        MyUser myUser = new MyUser();
+        myUser.setUsername(username);
+        myUser.setPassword(password);
+        myUser.login(new SaveListener<MyUser>() {
+
+            @Override
+            public void done(MyUser bmobUser, BmobException e) {
+                if(e==null){
+                    LogUtils.e("登录成功:");
+                    onLoginSuccess();
+                    progressDialog.dismiss();
+
+                    //通过BmobUser user = BmobUser.getCurrentUser()获取登录成功后的本地用户信息
+                    //如果是自定义用户对象MyUser，可通过MyUser user = BmobUser.getCurrentUser(MyUser.class)获取自定义用户信息
+                }else{
+                    LogUtils.e("登录失败");
+                    onLoginFailed();
+                    progressDialog.dismiss();
+                }
+            }
+        });
+
+        /*OkGo.get(CONFIG.URL_LOGIN)
                 .params("username", username)
                 .params("password", password)
                 .execute(new StringCallback() {
@@ -102,7 +129,7 @@ public class LoginActivity extends BaseActivity {
                         }
 
                     }
-                });
+                });*/
     }
 
     @Override

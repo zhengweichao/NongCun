@@ -1,12 +1,20 @@
 package com.bishe.nongcun.activity;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bishe.nongcun.R;
+import com.bishe.nongcun.bean.MyUser;
 import com.bishe.nongcun.bean.PriceItem;
 import com.bishe.nongcun.imageloader.GlideImageLoader;
+import com.bishe.nongcun.ui.ChatActivity;
 import com.bishe.nongcun.utils.LogUtils;
 import com.bumptech.glide.Glide;
 import com.youth.banner.Banner;
@@ -15,6 +23,12 @@ import com.youth.banner.BannerConfig;
 import java.util.ArrayList;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cn.bmob.newim.BmobIM;
+import cn.bmob.newim.bean.BmobIMConversation;
+import cn.bmob.newim.bean.BmobIMUserInfo;
+import cn.bmob.v3.BmobUser;
 
 public class FoodDetailActivity extends BaseActivity {
 
@@ -29,7 +43,6 @@ public class FoodDetailActivity extends BaseActivity {
     @Bind(R.id.tv_detail_foods_time)
     TextView tvDetailFoodsTime;
 
-    Integer[] imageses = {R.mipmap.girl, R.mipmap.bg_splash, R.mipmap.girl, R.mipmap.img_userhead};
     @Bind(R.id.tv_detail_foods_area)
     TextView tvDetailFoodsArea;
     @Bind(R.id.bt_detail_foods_tel)
@@ -42,6 +55,8 @@ public class FoodDetailActivity extends BaseActivity {
     ImageView ivDetailFoods2;
     @Bind(R.id.iv_detail_foods_3)
     ImageView ivDetailFoods3;
+    @Bind(R.id.bt_detail_foods_im)
+    Button btDetailFoodsIm;
     private PriceItem newprice;
 
     @Override
@@ -63,10 +78,6 @@ public class FoodDetailActivity extends BaseActivity {
         images.add(newprice.getPic2().getFileUrl());
         images.add(newprice.getPic3().getFileUrl());
 
-//        for (int i = 0; i < imageses.length; i++) {
-//            images.add(imageses[i]);
-//        }
-
         //设置图片集合
         bannerFoodDetail.setImages(images);
         //设置banner动画效果
@@ -85,7 +96,6 @@ public class FoodDetailActivity extends BaseActivity {
 
     @Override
     void initData() {
-
 
         tvDetailFoodsName.setText(newprice.getTitle());
         tvDetailFoodsArea.setText("地区：" + newprice.getAuthor().getAddress());
@@ -120,4 +130,48 @@ public class FoodDetailActivity extends BaseActivity {
 
     }
 
+    @OnClick({R.id.bt_detail_foods_tel, R.id.bt_detail_foods_im})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.bt_detail_foods_tel:
+                String mobilePhoneNumber = newprice.getAuthor().getMobilePhoneNumber();
+                if (!TextUtils.isEmpty(mobilePhoneNumber)) {
+                    LogUtils.e("" + mobilePhoneNumber);
+                    //跳到拨号页面
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mobilePhoneNumber));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+            /*直接拨打电话
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:13930023254"));
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            startActivity(intent);*/
+                } else {
+                    Toast.makeText(this, "该用户没有留下电话信息，请私信尝试", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.bt_detail_foods_im:
+
+                MyUser user = newprice.getAuthor();
+                LogUtils.e("开始im" + user.getObjectId());
+                BmobIMUserInfo info = new BmobIMUserInfo(user.getObjectId(), user.getUsername(), null);
+
+                BmobIMConversation conversationEntrance = BmobIM.getInstance().startPrivateConversation(info, null);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("c", conversationEntrance);
+                Intent intent = new Intent(FoodDetailActivity.this, ChatActivity.class);
+                intent.putExtra(FoodDetailActivity.this.getPackageName(), bundle);
+                startActivity(intent);
+
+                break;
+        }
+    }
 }

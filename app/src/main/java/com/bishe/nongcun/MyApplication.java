@@ -22,6 +22,22 @@ import cn.bmob.newim.BmobIM;
 
 public class MyApplication extends Application {
 
+    private static MyApplication INSTANCE;
+
+    public static MyApplication INSTANCE() {
+        return INSTANCE;
+    }
+
+    private void setInstance(MyApplication app) {
+        setBmobIMApplication(app);
+    }
+
+    private static void setBmobIMApplication(MyApplication a) {
+        MyApplication.INSTANCE = a;
+    }
+
+
+
     @Override
     public void onCreate() {
         super.onCreate();

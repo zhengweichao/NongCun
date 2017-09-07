@@ -5,19 +5,28 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.activity.AboutActivity;
+import com.bishe.nongcun.activity.ConversationActivity;
+import com.bishe.nongcun.activity.LoginActivity;
 import com.bishe.nongcun.activity.MessageActivity;
 import com.bishe.nongcun.activity.MyPushActivity;
 import com.bishe.nongcun.activity.MySaleActivity;
+import com.bishe.nongcun.activity.TestActivity;
+import com.bishe.nongcun.activity.UserInfoActivity;
 import com.bishe.nongcun.adapter.KeyValueAdapter;
 import com.bishe.nongcun.bean.KeyValue;
+import com.bishe.nongcun.model.UserModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.bmob.newim.BmobIM;
+import cn.bmob.v3.BmobUser;
 
 /**
  * @ 创建时间: 2017/5/26 on 10:39.
@@ -33,6 +42,7 @@ public class Fragment4_my extends BaseFragment {
     private List<KeyValue> kvOtherList = new ArrayList<KeyValue>();
     private KeyValueAdapter adapterOther;
     private ListView lvOther;
+    private Button btn_my_logout;
 
     @Nullable
     @Override
@@ -40,6 +50,7 @@ public class Fragment4_my extends BaseFragment {
         View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_4_my, null);
         lvScreen = (ListView) inflate.findViewById(R.id.lvScreen);
         lvOther = (ListView) inflate.findViewById(R.id.lvOther);
+        btn_my_logout = (Button) inflate.findViewById(R.id.btn_my_logout);
         return inflate;
     }
 
@@ -64,8 +75,8 @@ public class Fragment4_my extends BaseFragment {
 
     private void initOther() {
         kvOtherList.clear();
-        kvOtherList.add(new KeyValue("供应消息", ""));
-        kvOtherList.add(new KeyValue("求购消息", ""));
+//        kvOtherList.add(new KeyValue("供应消息", ""));
+//        kvOtherList.add(new KeyValue("求购消息", ""));
         kvOtherList.add(new KeyValue("供应配置", ""));
         kvOtherList.add(new KeyValue("求购配置", ""));
         kvOtherList.add(new KeyValue("检查更新", ""));
@@ -76,6 +87,19 @@ public class Fragment4_my extends BaseFragment {
 
     @Override
     public void initListener() {
+        btn_my_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BmobUser.logOut();   //清除缓存用户对象
+
+                //TODO 连接：3.2、退出登录需要断开与IM服务器的连接
+                BmobIM.getInstance().disConnect();
+                getActivity().finish();
+                startActivity(new Intent(mActivity, LoginActivity.class));
+
+            }
+        });
+
         lvScreen.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -83,18 +107,20 @@ public class Fragment4_my extends BaseFragment {
                 switch (position) {
                     case 0:
                         // TODO: 2017/8/3 个人信息
-                        intent = new Intent(mActivity, MessageActivity.class);
-
+                        intent = new Intent(mActivity, UserInfoActivity.class);
+                        startActivity(intent);
                         break;
                     case 1:
                         //TODO 跳转到我的消息页面
-                        intent = new Intent(mActivity, MessageActivity.class);
+                        intent = new Intent(mActivity, ConversationActivity.class);
+                        startActivity(intent);
+//                        intent = new Intent(mActivity, MessageActivity.class);
+//                        startActivity(intent);
                         break;
                     default:
                         break;
                 }
 
-                startActivity(intent);
 
             }
         });
@@ -105,30 +131,22 @@ public class Fragment4_my extends BaseFragment {
                 Intent intent = null;
                 switch (position) {
                     case 0:
-//                        供应消息
-
-                        break;
-                    case 1:
-//                        求购消息
-
-                        break;
-                    case 2:
 //                        供应配置
                         intent = new Intent(mActivity, MySaleActivity.class);
                         startActivity(intent);
                         break;
-                    case 3:
+                    case 1:
 //                        求购配置
                         intent = new Intent(mActivity, MyPushActivity.class);
                         startActivity(intent);
                         break;
-                    case 4:
+                    case 2:
 //                        检查更新
                         Toast.makeText(mActivity, "当前已是最新版本", Toast.LENGTH_SHORT).show();
                         break;
-                    case 5:
+                    case 3:
 //                        跳转到关于页面
-                        startActivity(new Intent(mActivity, AboutActivity.class));
+                        intent = new Intent(mActivity, AboutActivity.class);
                         startActivity(intent);
                         break;
                     default:

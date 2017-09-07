@@ -1,121 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#fff"
     tools:context="com.bishe.nongcun.activity.WantBuyDetailActivity">
 
-    <include layout="@layout/layout_title_bar_back" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="15dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_wantbuy_title"
+        <include layout="@layout/layout_title_bar_back" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="求购：河口菠萝"
-            android:textColor="#000"
-            android:textSize="18sp" />
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <TextView
+                android:id="@+id/tv_wantbuy_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="求购：河口菠萝"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#666" />
+
+            <TextView
+                android:id="@+id/tv_wantbuy_kind"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="求购品种："
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_wantbuy_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="求购数量：10万斤"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_wantbuy_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="发布时间：2017-08-24"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_wantbuy_anthor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="采购人：王先生"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_wantbuy_author_tel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="联系电话：13930023254"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_wantbuy_author_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="所在地区：北京丰台"
+                android:textSize="15sp" />
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="20dp"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:background="#666" />
+            android:background="#eee" />
 
-        <TextView
-            android:id="@+id/tv_wantbuy_kind"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="求购品种："
-            android:textSize="15sp" />
+            android:orientation="vertical"
+            android:padding="15dp">
 
-        <TextView
-            android:id="@+id/tv_wantbuy_count"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="详细说明"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_wantbuy_detail_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/et_bg0"
+                android:padding="8dp"
+                android:text="要求河口菠萝中的极品，无论从外观还是口感都要最好的，只要货好，价格好说。"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bt_want_buy_tel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="求购数量：10万斤"
-            android:textSize="15sp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/select_button"
+            android:padding="5dp"
+            android:text="@string/phone_call" />
 
-        <TextView
-            android:id="@+id/tv_wantbuy_time"
+        <Button
+            android:id="@+id/bt_want_buy_im"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="发布时间：2017-08-24"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/tv_wantbuy_anthor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="采购人：王先生"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/tv_wantbuy_author_tel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="联系电话：13930023254"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/tv_wantbuy_author_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="所在地区：北京丰台"
-            android:textSize="15sp" />
-
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/select_button"
+            android:padding="5dp"
+            android:text="私信联系" />
     </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:background="#eee" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="15dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="详细说明"
-            android:textColor="#000"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/tv_wantbuy_detail_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/et_bg0"
-            android:padding="8dp"
-            android:text="要求河口菠萝中的极品，无论从外观还是口感都要最好的，只要货好，价格好说。"
-            android:textSize="15sp" />
-
-    </LinearLayout>
-
-
-</LinearLayout>
+</ScrollView>

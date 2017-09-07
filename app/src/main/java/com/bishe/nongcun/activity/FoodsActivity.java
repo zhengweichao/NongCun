@@ -1,38 +1,38 @@
 package com.bishe.nongcun.activity;
 
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.AdapterView;
+import android.support.annotation.IdRes;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 
 import com.bishe.nongcun.R;
+import com.bishe.nongcun.fragment.FragmentFoods1;
+import com.bishe.nongcun.fragment.FragmentFoods2;
+import com.bishe.nongcun.fragment.FragmentFoods3;
+import com.bishe.nongcun.fragment.FragmentFoods4;
+import com.bishe.nongcun.utils.LogUtils;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class FoodsActivity extends BaseActivity {
 
-    @Bind(R.id.rbtn_pifa)
-    RadioButton rbtnPifa;
     @Bind(R.id.rbtn_qiugou)
     RadioButton rbtnQiugou;
     @Bind(R.id.rbtn_price)
     RadioButton rbtnPrice;
-    @Bind(R.id.rbtn_news)
-    RadioButton rbtnNews;
     @Bind(R.id.rg_cando_list)
     RadioGroup rgCandoList;
-    @Bind(R.id.spinner2)
-    Spinner spinner2;
-    @Bind(R.id.spinner3)
-    Spinner spinner3;
-    @Bind(R.id.rv_foods_all)
-    RecyclerView rvFoodsAll;
+    @Bind(R.id.vp_foods)
+    ViewPager vpFoods;
 
+    private ArrayList<Fragment> fragmentList;
 
     @Override
     int getLayoutId() {
@@ -40,42 +40,79 @@ public class FoodsActivity extends BaseActivity {
     }
 
     @Override
-    void initView() {
-        rgCandoList.check(R.id.rbtn_pifa);
-    }
-
-    @Override
     void initData() {
-        rvFoodsAll.setLayoutManager(new LinearLayoutManager(FoodsActivity.this));
+        fragmentList = new ArrayList<>();
+        String selectable = getIntent().getStringExtra("select");
+        if ("false".equals(selectable)) {
+            fragmentList.add(new FragmentFoods3());
+            fragmentList.add(new FragmentFoods4());
+        } else {
+            fragmentList.add(new FragmentFoods1());
+            fragmentList.add(new FragmentFoods2());
+        }
+        vpFoods.setAdapter(new FoodsAdapter(getSupportFragmentManager()));
     }
 
     @Override
     void initListener() {
-
-        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        rgCandoList.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                LogUtils.i(checkedId + "条目id");
+                if (checkedId == R.id.rbtn_qiugou) {
+                    vpFoods.setCurrentItem(0);
+                } else {
+                    vpFoods.setCurrentItem(1);
+                }
+            }
+        });
+
+        vpFoods.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onPageSelected(int position) {
+                LogUtils.e(position + "条目id");
+                if (position == 0) {
+                    rgCandoList.check(R.id.rbtn_qiugou);
+                } else {
+                    rgCandoList.check(R.id.rbtn_price);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
-        spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        String item = getIntent().getStringExtra("item");
+        if ("price".equals(item)) {
+            rgCandoList.check(R.id.rbtn_price);
+        } else {
+            rgCandoList.check(R.id.rbtn_qiugou);
+        }
 
     }
 
+    class FoodsAdapter extends FragmentPagerAdapter {
+
+        public FoodsAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragmentList.size();
+        }
+    }
 
 }

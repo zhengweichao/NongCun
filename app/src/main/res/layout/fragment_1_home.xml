@@ -132,6 +132,14 @@
                 android:overScrollMode="never">
 
             </android.support.v7.widget.RecyclerView>
+            <Button
+                android:id="@+id/btn_main_look_all"
+                style="@style/style_button_logout"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_margin="16dp"
+                android:text="浏览全部内容" />
         </LinearLayout>
+
     </LinearLayout>
 </ScrollView>

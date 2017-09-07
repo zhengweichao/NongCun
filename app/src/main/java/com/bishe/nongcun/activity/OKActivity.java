@@ -27,12 +27,12 @@ public class OKActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_my_wantbuy:
-                Intent intent = new Intent(OKActivity.this, OKActivity.class);
+                Intent intent = new Intent(OKActivity.this, MyPushActivity.class);
                 startActivity(intent);
 
                 break;
             case R.id.btn_btn_my_price:
-                Intent intent0 = new Intent(OKActivity.this, OKActivity.class);
+                Intent intent0 = new Intent(OKActivity.this, MySaleActivity.class);
                 startActivity(intent0);
                 break;
         }

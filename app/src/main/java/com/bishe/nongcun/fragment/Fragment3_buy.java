@@ -1,7 +1,5 @@
 package com.bishe.nongcun.fragment;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,6 +16,7 @@ import com.bishe.nongcun.bean.WantBuyItem;
 import com.bishe.nongcun.utils.ChooseCityInterface;
 import com.bishe.nongcun.utils.ChooseCityUtil;
 import com.bishe.nongcun.utils.LogUtils;
+import com.bishe.nongcun.view.LoadDialog;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -103,6 +102,7 @@ public class Fragment3_buy extends BaseFragment {
                 wantBuyItem.setKind3(kind3);
                 wantBuyItem.setTitle(title);
                 wantBuyItem.setAuthor(user);
+                LoadDialog.show(mActivity, "发布报价中...");
                 wantBuyItem.save(new SaveListener<String>() {
 
                     @Override
@@ -111,12 +111,12 @@ public class Fragment3_buy extends BaseFragment {
                             Toast.makeText(mActivity, "创建数据成功", Toast.LENGTH_SHORT).show();
                             LogUtils.e("创建数据成功：" + objectId);
                             initNull();
-//                            showOkDialog();
                             Intent intent = new Intent(mActivity, OKActivity.class);
                             startActivity(intent);
                         } else {
                             LogUtils.e("失败：" + e.getMessage() + "," + e.getErrorCode());
                         }
+                        LoadDialog.dismiss(mActivity);
                     }
                 });
 

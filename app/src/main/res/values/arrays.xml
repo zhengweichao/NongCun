@@ -13,12 +13,12 @@
     </string-array>
 
     <string-array name="areas">
-        <item>全国</item>
-        <item>北京</item>
-        <item>河北</item>
-        <item>山西</item>
-        <item>山东</item>
-        <item>河南</item>
+        <item>全秦皇岛</item>
+        <item>北戴河</item>
+        <item>海港区</item>
+        <item>山海关</item>
+        <item>卢龙县</item>
+        <item>青龙县</item>
     </string-array>
 
     <string-array name="languages">
@@ -28,4 +28,13 @@
         <item>xml</item>
         <item>html</item>
     </string-array>
+
+    <string-array name="units">
+        <item>/斤</item>
+        <item>/个</item>
+        <item>/根</item>
+        <item>/亩</item>
+        <item>/次</item>
+    </string-array>
+
 </resources>
