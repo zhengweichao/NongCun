@@ -1,12 +1,16 @@
 package com.bishe.nongcun.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bishe.nongcun.R;
@@ -21,6 +25,7 @@ import com.bishe.nongcun.activity.UserInfoActivity;
 import com.bishe.nongcun.adapter.KeyValueAdapter;
 import com.bishe.nongcun.bean.KeyValue;
 import com.bishe.nongcun.model.UserModel;
+import com.bishe.nongcun.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +48,7 @@ public class Fragment4_my extends BaseFragment {
     private KeyValueAdapter adapterOther;
     private ListView lvOther;
     private Button btn_my_logout;
+    private Switch switch_state_sound;
 
     @Nullable
     @Override
@@ -51,18 +57,23 @@ public class Fragment4_my extends BaseFragment {
         lvScreen = (ListView) inflate.findViewById(R.id.lvScreen);
         lvOther = (ListView) inflate.findViewById(R.id.lvOther);
         btn_my_logout = (Button) inflate.findViewById(R.id.btn_my_logout);
+        switch_state_sound = (Switch) inflate.findViewById(R.id.switch_state_sound);
+
         return inflate;
     }
 
     @Override
     public void initData() {
+        Boolean sound = (Boolean) SPUtils.get(mActivity, "sound", true);
+        switch_state_sound.setChecked(sound);
+
         adapterScreen = new KeyValueAdapter(mActivity, kvScreenList);
         lvScreen.setAdapter(adapterScreen);
         adapterOther = new KeyValueAdapter(mActivity, kvOtherList);
         lvOther.setAdapter(adapterOther);
 
-        initScreen();//加载屏幕显示
-        initOther();//加载其他设置
+        initScreen();
+        initOther();
     }
 
     private void initScreen() {
@@ -75,10 +86,9 @@ public class Fragment4_my extends BaseFragment {
 
     private void initOther() {
         kvOtherList.clear();
-//        kvOtherList.add(new KeyValue("供应消息", ""));
-//        kvOtherList.add(new KeyValue("求购消息", ""));
-        kvOtherList.add(new KeyValue("供应配置", ""));
-        kvOtherList.add(new KeyValue("求购配置", ""));
+
+        kvOtherList.add(new KeyValue("供应管理", ""));
+        kvOtherList.add(new KeyValue("求购管理", ""));
         kvOtherList.add(new KeyValue("检查更新", ""));
         kvOtherList.add(new KeyValue("关于", ""));
 
@@ -87,16 +97,46 @@ public class Fragment4_my extends BaseFragment {
 
     @Override
     public void initListener() {
+        switch_state_sound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+                    SPUtils.put(mActivity, "sound", false);
+                } else {
+                    SPUtils.put(mActivity, "sound", true);
+                }
+            }
+        });
+
+/**
+ * 退出登录
+ *
+ */
         btn_my_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BmobUser.logOut();   //清除缓存用户对象
-
-                //TODO 连接：3.2、退出登录需要断开与IM服务器的连接
-                BmobIM.getInstance().disConnect();
-                getActivity().finish();
-                startActivity(new Intent(mActivity, LoginActivity.class));
-
+                AlertDialog dialog = new AlertDialog.Builder(mActivity)
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                BmobUser.logOut();   //清除缓存用户对象
+                                //TODO 连接：3.2、退出登录需要断开与IM服务器的连接
+                                BmobIM.getInstance().disConnect();
+                                getActivity().finish();
+                                startActivity(new Intent(mActivity, LoginActivity.class));
+                            }
+                        })
+                        .setMessage("确定要退出登录么？")
+                        .setTitle("退出登录")
+                        .setIcon(R.mipmap.ic_launcher)
+                        .create();
+                dialog.show();
             }
         });
 
@@ -120,8 +160,6 @@ public class Fragment4_my extends BaseFragment {
                     default:
                         break;
                 }
-
-
             }
         });
 

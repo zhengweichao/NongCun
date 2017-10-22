@@ -1,7 +1,5 @@
 package com.bishe.nongcun.fragment;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
@@ -38,6 +36,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.OnClick;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
@@ -52,7 +52,25 @@ import top.zibin.luban.OnCompressListener;
  */
 
 public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.OnRecyclerViewItemClickListener {
-    private TextView tvCity;
+
+    @Bind(R.id.et_push_sale_title)
+    EditText etPushSaleTitle;
+    @Bind(R.id.tv_select_mou)
+    TextView tvSelectMou;
+    @Bind(R.id.et_push_sale_desc)
+    EditText etPushSaleDesc;
+    @Bind(R.id.et_push_sale_count)
+    EditText etPushSaleCount;
+    @Bind(R.id.sp_push_sale_unites)
+    Spinner spPushSaleUnites;
+    @Bind(R.id.et_push_sale_price)
+    EditText etPushSalePrice;
+    @Bind(R.id.sp_push_sale_unit)
+    Spinner spPushSaleUnit;
+    @Bind(R.id.recyclerView0)
+    RecyclerView recyclerView0;
+    @Bind(R.id.bt_push_sale_enter)
+    Button btPushSaleEnter;
 
     public static final int IMAGE_ITEM_ADD = -1;
     public static final int REQUEST_CODE_SELECT = 100;
@@ -65,39 +83,18 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
     private String kind1;
     private String kind2;
     private String kind3;
-    private EditText et_desc;
-    private EditText et_title;
-    private EditText et_price;
-    private Button bt_enter;
-    private Spinner sp_unit;
+
     private String priceUnit = "/斤";
     private ArrayList<String> photos;
-    String[] filePaths = new String[3];
+    String[] filePaths;
+
     private String title;
     private String price;
     private String desc;
 
     @Override
     protected View initView() {
-        initImagePicker();
         View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_2_push, null);
-        tvCity = (TextView) inflate.findViewById(R.id.tv_select_mou);
-        RecyclerView recyclerView = (RecyclerView) inflate.findViewById(R.id.recyclerView0);
-        et_desc = (EditText) inflate.findViewById(R.id.et_push_sale_desc);
-        et_title = (EditText) inflate.findViewById(R.id.et_push_sale_title);
-        et_price = (EditText) inflate.findViewById(R.id.et_push_sale_price);
-        bt_enter = (Button) inflate.findViewById(R.id.bt_push_sale_enter);
-        sp_unit = (Spinner) inflate.findViewById(R.id.sp_push_sale_unit);
-
-
-        selImageList = new ArrayList<>();
-        adapter = new ImagePickerAdapter(mActivity, selImageList, maxImgCount);
-        adapter.setOnItemClickListener(this);
-
-        recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 4));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
-
         return inflate;
     }
 
@@ -117,9 +114,16 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
 
     @Override
     public void initData() {
+        initImagePicker();
+        selImageList = new ArrayList<>();
+        adapter = new ImagePickerAdapter(mActivity, selImageList, maxImgCount);
+        adapter.setOnItemClickListener(this);
 
+        recyclerView0.setLayoutManager(new GridLayoutManager(mActivity, 4));
+        recyclerView0.setHasFixedSize(true);
+        recyclerView0.setAdapter(adapter);
         //        种类选择
-        tvCity.setOnClickListener(new View.OnClickListener() {
+        tvSelectMou.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ChooseCityUtil cityUtil = new ChooseCityUtil();
@@ -128,7 +132,7 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
                     @Override
                     public void sure(String[] newCityArray) {
                         //oldCityArray为传入的默认值 newCityArray为返回的结果
-                        tvCity.setText(newCityArray[0] + "-" + newCityArray[1] + "-" + newCityArray[2]);
+                        tvSelectMou.setText(newCityArray[0] + "-" + newCityArray[1] + "-" + newCityArray[2]);
 
                         kind1 = newCityArray[0];
                         kind2 = newCityArray[1];
@@ -140,10 +144,9 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
         });
     }
 
-
     @Override
     public void initListener() {
-        sp_unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spPushSaleUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String[] units = getResources().getStringArray(R.array.units);
@@ -154,47 +157,17 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-
         });
-
-        bt_enter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                desc = et_desc.getText().toString().trim();
-                price = et_price.getText().toString().trim();
-                title = et_title.getText().toString().trim();
-
-                if (TextUtils.isEmpty(desc) || TextUtils.isEmpty(price) || TextUtils.isEmpty(title)) {
-                    Toast.makeText(mActivity, "请您完整地填写信息", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (TextUtils.isEmpty(kind1)) {
-                    Toast.makeText(mActivity, "请选择分类", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (selImageList.size() != 3) {
-                    Toast.makeText(mActivity, "请选择3张图片", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                LogUtils.e("开始压缩……");
-
-                ArrayList<String> paths = new ArrayList<>();
-                paths.add(selImageList.get(0).path);
-                paths.add(selImageList.get(1).path);
-                paths.add(selImageList.get(2).path);
-                initLuban(paths);
-
-            }
-        });
-
     }
 
+    /**
+     * 压缩图片
+     *
+     * @param paths
+     */
     private void initLuban(List<String> paths) {
         photos = new ArrayList<>();
+        filePaths=new String[selImageList.size()];
         Luban.with(mActivity)
                 .load(paths)                                   // 传入要压缩的图片列表
                 .ignoreBy(100)                                  // 忽略不压缩图片的大小
@@ -202,22 +175,20 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
                 .setCompressListener(new OnCompressListener() { //设置回调
                     @Override
                     public void onStart() {
-                        // TODO 压缩开始前调用，可以在方法内启动 loading UI
-                        LoadDialog.show(mActivity,"正在进行图片压缩ing……");
+                        LoadDialog.show(mActivity, "正在进行图片压缩ing……");
                     }
 
                     @Override
                     public void onSuccess(File file) {
-                        // TODO 压缩成功后调用，返回压缩后的图片文件
                         LogUtils.e("压缩成功");
                         LoadDialog.dismiss(mActivity);
-
-//                        Toast.makeText(mActivity, "压缩成功！", Toast.LENGTH_SHORT).show();
                         photos.add(file.getAbsolutePath());
-                        if (photos.size()==3){
-                            filePaths[0]=photos.get(0) ;
-                            filePaths[1]=photos.get(1) ;
-                            filePaths[2]=photos.get(2) ;
+
+                        if (photos.size() == selImageList.size()) {
+                            for (int i = 0; i < selImageList.size(); i++) {
+                                filePaths[i] = photos.get(i);
+//                                filePaths = (String[]) selImageList.toArray(new String[i]);
+                            }
                             BmobUpSale();
                         }
 
@@ -225,24 +196,24 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
 
                     @Override
                     public void onError(Throwable e) {
-                        // TODO 当压缩过程出现问题时调用
                         LoadDialog.dismiss(mActivity);
                         Toast.makeText(mActivity, "压缩失败！", Toast.LENGTH_SHORT).show();
                     }
                 }).launch();    //启动压缩
-
     }
 
+    /**
+     * 上传
+     */
     private void BmobUpSale() {
         LoadDialog.show(mActivity, "发布供应中...");
         LogUtils.e("开始上传……");
-        BmobFile.uploadBatch(filePaths, new UploadBatchListener() {
 
+        BmobFile.uploadBatch(filePaths, new UploadBatchListener() {
             @Override
             public void onSuccess(List<BmobFile> files, List<String> urls) {
-                // TODO Auto-generated method stub
-                Log.i("life", "insertDataWithMany -onSuccess :" + urls.size() + "-----" + files + "----" + urls);
-                if (urls.size() == 3) {//如果全部上传完，则更新该条记录
+                LogUtils.e("s :" + urls.size() + "-----" + files + "----" + urls);
+                if (urls.size() == filePaths.length) {//如果全部上传完，则更新该条记录
                     PriceItem priceItem = new PriceItem();
                     MyUser user = BmobUser.getCurrentUser(MyUser.class);
                     priceItem.setAuthor(user);
@@ -252,19 +223,28 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
                     priceItem.setKind1(kind1);
                     priceItem.setKind2(kind2);
                     priceItem.setKind3(kind3);
-                    priceItem.setPic1(files.get(0));
-                    priceItem.setPic2(files.get(1));
-                    priceItem.setPic3(files.get(2));
+                    if (filePaths.length == 1) {
+                        priceItem.setPic1(files.get(0));
+                    } else if (filePaths.length == 2) {
+                        priceItem.setPic1(files.get(0));
+                        priceItem.setPic2(files.get(1));
+                    } else if (filePaths.length == 3) {
+                        priceItem.setPic1(files.get(0));
+                        priceItem.setPic2(files.get(1));
+                        priceItem.setPic3(files.get(2));
+                    }
+
                     priceItem.save(new SaveListener<String>() {
                         @Override
                         public void done(String objectId, BmobException e) {
-
                             if (e == null) {
-                                LogUtils.e("上传成功……");
-                                Toast.makeText(mActivity, "创建数据成功", Toast.LENGTH_SHORT).show();
-                                LogUtils.e("创建数据成功：" + objectId);
+                                LogUtils.e("上传成功……"+ objectId);
+                                Toast.makeText(mActivity, "发布出售成功", Toast.LENGTH_SHORT).show();
                                 initNull();
                                 Intent intent = new Intent(mActivity, OKActivity.class);
+                                intent.putExtra("kind1", kind1);
+                                intent.putExtra("kind2", kind2);
+                                intent.putExtra("need", "wantbuy");
                                 startActivity(intent);
                                 LoadDialog.dismiss(mActivity);
                             } else {
@@ -283,17 +263,14 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
             public void onError(int statuscode, String errormsg) {
                 LogUtils.e("错误码" + statuscode + ",错误描述：" + errormsg);
                 Toast.makeText(mActivity, "发生错误，请稍后重试", Toast.LENGTH_SHORT).show();
-                // TODO Auto-generated method stub
                 LoadDialog.dismiss(mActivity);
             }
 
             @Override
             public void onProgress(int curIndex, int curPercent, int total, int totalPercent) {
                 Log.i("life", "insertBatchDatasWithOne -onProgress :" + curIndex + "---" + curPercent + "---" + total + "----" + totalPercent);
-                // TODO Auto-generated method stub
-                LoadDialog.dismiss(mActivity);
+//                LoadDialog.dismiss(mActivity);
             }
-
 
         });
 
@@ -309,10 +286,9 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
     }
 
     private void initNull() {
-        et_desc.setText("");
-        et_title.setText("");
-//        et_unit.setText("");
-        et_price.setText("");
+        etPushSaleDesc.setText("");
+        etPushSaleTitle.setText("");
+        etPushSalePrice.setText("");
     }
 
     private SelectDialog showDialog(SelectDialog.SelectDialogListener listener, List<String> names) {
@@ -407,6 +383,74 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
                 }
             }
         }
+    }
+
+    @OnClick(R.id.bt_push_sale_enter)
+    public void onViewClicked() {
+        desc = etPushSaleDesc.getText().toString().trim();
+        price = etPushSalePrice.getText().toString().trim();
+        title = etPushSaleTitle.getText().toString().trim();
+
+        if (TextUtils.isEmpty(desc) || TextUtils.isEmpty(price) || TextUtils.isEmpty(title)) {
+            Toast.makeText(mActivity, "请您完整地填写信息", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(kind1)) {
+            Toast.makeText(mActivity, "请选择分类", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+/*        if (selImageList.size() != 3) {
+            Toast.makeText(mActivity, "请选择3张图片", Toast.LENGTH_SHORT).show();
+            return;
+        }*/
+        if (selImageList.size() != 0) {
+            LogUtils.e("开始压缩……");
+            ArrayList<String> paths = new ArrayList<>();
+            for (int i = 0; i < selImageList.size(); i++) {
+                paths.add(selImageList.get(i).path);
+            }
+            initLuban(paths);
+        } else {
+            BmobUpSaleNoPic();
+        }
+
+    }
+
+    private void BmobUpSaleNoPic() {
+        LoadDialog.show(mActivity, "发布供应中...");
+
+        PriceItem priceItem = new PriceItem();
+        MyUser user = BmobUser.getCurrentUser(MyUser.class);
+        priceItem.setAuthor(user);
+        priceItem.setTitle(title);
+        priceItem.setContent(desc);
+        priceItem.setPrice(price + "元" + priceUnit);
+        priceItem.setKind1(kind1);
+        priceItem.setKind2(kind2);
+        priceItem.setKind3(kind3);
+
+        priceItem.save(new SaveListener<String>() {
+            @Override
+            public void done(String objectId, BmobException e) {
+                if (e == null) {
+                    LogUtils.e("发布成功……"+ objectId);
+                    Toast.makeText(mActivity, "发布出售成功", Toast.LENGTH_SHORT).show();
+                    initNull();
+                    Intent intent = new Intent(mActivity, OKActivity.class);
+                    intent.putExtra("kind1", kind1);
+                    intent.putExtra("kind2", kind2);
+                    intent.putExtra("need", "wantbuy");
+                    startActivity(intent);
+                    LoadDialog.dismiss(mActivity);
+                } else {
+                    LogUtils.e("失败：" + e.getMessage() + "," + e.getErrorCode());
+                    Toast.makeText(mActivity, "请检查网络连接", Toast.LENGTH_SHORT).show();
+                    LoadDialog.dismiss(mActivity);
+                }
+            }
+        });
     }
 
 }

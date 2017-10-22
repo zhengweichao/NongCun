@@ -18,16 +18,16 @@ public class VWelcomeActivity extends WelcomeActivity {
         return new WelcomeConfiguration.Builder(this)
                 .defaultBackgroundColor(R.color.colorAccent)
                 .page(new TitlePage(R.mipmap.girl,
-                        "Title")
+                        "城农通")
                 )
                 .page(new BasicPage(R.mipmap.girl,
-                        "Header",
-                        "More text.")
+                        "城农通",
+                        "方便快捷")
                         .background(R.color.base_progress_bar_color)
                 )
                 .page(new BasicPage(R.drawable.base_empty,
-                        "Lorem ipsum",
-                        "dolor sit amet.")
+                        "安全",
+                        "快速找到你想要的")
                 )
                 .swipeToDismiss(true)
                 .build();

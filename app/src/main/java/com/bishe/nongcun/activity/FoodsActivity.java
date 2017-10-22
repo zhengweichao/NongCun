@@ -1,14 +1,18 @@
 package com.bishe.nongcun.activity;
 
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
+import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
-import android.util.Log;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.fragment.FragmentFoods1;
@@ -16,10 +20,14 @@ import com.bishe.nongcun.fragment.FragmentFoods2;
 import com.bishe.nongcun.fragment.FragmentFoods3;
 import com.bishe.nongcun.fragment.FragmentFoods4;
 import com.bishe.nongcun.utils.LogUtils;
+import com.bishe.nongcun.utils.SPUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class FoodsActivity extends BaseActivity {
 
@@ -31,6 +39,10 @@ public class FoodsActivity extends BaseActivity {
     RadioGroup rgCandoList;
     @Bind(R.id.vp_foods)
     ViewPager vpFoods;
+    @Bind(R.id.btnSound)
+    Button btnSound;
+    private MediaPlayer mediaPlayer;
+    private String filename;
 
     private ArrayList<Fragment> fragmentList;
 
@@ -98,6 +110,22 @@ public class FoodsActivity extends BaseActivity {
 
     }
 
+    @OnClick(R.id.btnSound)
+    public void onViewClicked() {
+        Boolean sound = (Boolean) SPUtils.get(FoodsActivity.this, "sound", true);
+        if (sound) {
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+            } else {
+                play("001.mp3");
+            }
+
+        } else {
+            Toast.makeText(this, "暂未开启语音帮助！", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     class FoodsAdapter extends FragmentPagerAdapter {
 
         public FoodsAdapter(FragmentManager fm) {
@@ -112,6 +140,39 @@ public class FoodsActivity extends BaseActivity {
         @Override
         public int getCount() {
             return fragmentList.size();
+        }
+    }
+
+    /**
+     * 播放提示语音
+     *
+     * @param filename 文件名
+     */
+    private void play(String filename) {
+        this.filename = filename;
+        try {
+            AssetManager assetManager = this.getAssets();   ////获得该应用的AssetManager
+            AssetFileDescriptor afd = assetManager.openFd(filename);   //根据文件名找到文件
+            //对mediaPlayer进行实例化
+            mediaPlayer = new MediaPlayer();
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.reset();    //如果正在播放，则重置为初始状态
+            }
+            mediaPlayer.setDataSource(afd.getFileDescriptor(),
+                    afd.getStartOffset(), afd.getLength());     //设置资源目录
+            mediaPlayer.prepare();//缓冲
+            mediaPlayer.start();//开始或恢复播放
+        } catch (IOException e) {
+            LogUtils.e("没有找到这个文件");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
         }
     }
 

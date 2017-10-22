@@ -5,7 +5,7 @@
     android:clipChildren="false"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_title_bar_ok" />
+    <include layout="@layout/layout_title_bar_tip" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
@@ -18,10 +18,29 @@
         android:layout_height="0.1dp"
         android:background="#c7c7c7" />
 
-    <com.bishe.nongcun.view.BottomTabView
-        android:id="@+id/bottomTabView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="#feffff"
-        android:gravity="bottom" />
+        android:layout_height="wrap_content">
+        <com.bishe.nongcun.view.BottomTabView
+            android:id="@+id/bottomTabView"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#feffff"
+            android:gravity="bottom" />
+        <ImageView
+            android:id="@+id/iv_newim_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="7dp"
+            android:background="@mipmap/msg_tips"
+            android:contentDescription="@string/action_settings"
+            android:gravity="center"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="12sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
 </LinearLayout>

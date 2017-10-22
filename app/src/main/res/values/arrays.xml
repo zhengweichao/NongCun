@@ -37,4 +37,11 @@
         <item>/次</item>
     </string-array>
 
+    <string-array name="unites">
+        <item>斤</item>
+        <item>个</item>
+        <item>根</item>
+        <item>亩</item>
+        <item>次</item>
+    </string-array>
 </resources>

@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context="com.bishe.nongcun.activity.FoodsActivity">
 
-    <include layout="@layout/layout_title_bar_back" />
+    <include layout="@layout/layout_title_bar_back_tip" />
 
     <RadioGroup
         android:id="@+id/rg_cando_list"
@@ -24,7 +24,7 @@
         <RadioButton
             android:id="@+id/rbtn_price"
             style="@style/radiobuttonmy"
-            android:text="价格" />
+            android:text="出售" />
 
     </RadioGroup>
 

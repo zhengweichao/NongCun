@@ -13,6 +13,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.bean.MyUser;
@@ -25,6 +27,7 @@ import com.orhanobut.logger.Logger;
 import com.stephentuso.welcome.WelcomeHelper;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,6 +38,8 @@ import butterknife.OnClick;
 import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMUserInfo;
 import cn.bmob.newim.core.ConnectionStatus;
+import cn.bmob.newim.event.MessageEvent;
+import cn.bmob.newim.event.OfflineMessageEvent;
 import cn.bmob.newim.listener.ConnectListener;
 import cn.bmob.newim.listener.ConnectStatusChangeListener;
 import cn.bmob.v3.BmobUser;
@@ -54,6 +59,8 @@ public abstract class BottomTabBaseActivity extends AppCompatActivity {
     WelcomeHelper welcomeScreen;
     @Bind(R.id.btnSound)
     Button btnSound;
+    @Bind(R.id.iv_newim_tips)
+    ImageView ivNewimTips;
     private MediaPlayer mediaPlayer;
     private int position;
     private String filename;
@@ -64,7 +71,6 @@ public abstract class BottomTabBaseActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.activity_base_bottom_tab);
         ButterKnife.bind(this);
-
 
         initChatContact();
         welcomeScreen = new WelcomeHelper(this, VWelcomeActivity.class);
@@ -155,20 +161,31 @@ public abstract class BottomTabBaseActivity extends AppCompatActivity {
     public void onViewClicked() {
         Boolean sound = (Boolean) SPUtils.get(BottomTabBaseActivity.this, "sound", true);
         if (sound) {
-            if (mediaPlayer != null && mediaPlayer.isPlaying()){
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
-            }else{
+            } else {
                 play("001.mp3");
             }
 
         } else {
-
+            Toast.makeText(this, "暂未开启语音帮助！", Toast.LENGTH_SHORT).show();
         }
 
     }
 
+    private void checkRedPoint() {
+        //TODO 会话：4.4、获取全部会话的未读消息数量
+        int count = (int) BmobIM.getInstance().getAllUnReadCount();
+        if (count > 0) {
+            ivNewimTips.setVisibility(View.VISIBLE);
+        } else {
+            ivNewimTips.setVisibility(View.GONE);
+        }
+    }
+
     /**
      * 播放提示语音
+     *
      * @param filename 文件名
      */
     private void play(String filename) {
@@ -190,4 +207,46 @@ public abstract class BottomTabBaseActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
+    }
+
+    /**
+     * 注册消息接收事件
+     *
+     * @param event
+     */
+    //TODO 消息接收：8.3、通知有在线消息接收
+    @Subscribe
+    public void onEventMainThread(MessageEvent event) {
+        checkRedPoint();
+    }
+
+    /**
+     * 注册离线消息接收事件
+     *
+     * @param event
+     */
+    //TODO 消息接收：8.4、通知有离线消息接收
+    @Subscribe
+    public void onEventMainThread(OfflineMessageEvent event) {
+        checkRedPoint();
+    }
+
+    /**
+     * 注册自定义消息接收事件
+     *
+     * @param event
+     */
+    //TODO 消息接收：8.5、通知有自定义消息接收
+    @Subscribe
+    public void onEventMainThread(RefreshEvent event) {
+        checkRedPoint();
+    }
+
 }

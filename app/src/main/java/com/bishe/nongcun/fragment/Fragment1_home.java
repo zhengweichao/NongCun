@@ -48,7 +48,7 @@ public class Fragment1_home extends BaseFragment {
     int[] MoudleLogo = {R.mipmap.shucai, R.mipmap.shuiguo, R.mipmap.yangzhi, R.mipmap.liangyou,
             R.mipmap.miaomu, R.mipmap.zhongyao, R.mipmap.nongzi, R.mipmap.nongji};
     Class[] clazz = {MouDetailActivity.class, MouDetailActivity.class, MouDetailActivity.class, MouDetailActivity.class,
-            MouDetailActivity.class, MouDetailActivity.class, MouDetailActivity.class, MainActivity.class
+            MouDetailActivity.class, MouDetailActivity.class, MouDetailActivity.class, MouDetailActivity.class
     };
     private MoudleAdapter moudleAdapter;
     private RecyclerView mRecyclerView;
@@ -129,7 +129,6 @@ public class Fragment1_home extends BaseFragment {
                 if (e == null) {
                     LogUtils.e("查询成功：共" + object.size() + "条数据。");
                     for (PriceItem priceItem : object) {
-
                         mainNewsesdataPrice.add(priceItem);
                     }
                     mainNewsPriceAdapter.setData(mainNewsesdataPrice);
@@ -158,9 +157,7 @@ public class Fragment1_home extends BaseFragment {
                 if (e == null) {
                     LogUtils.e("查询成功：共" + object.size() + "条数据。");
                     for (WantBuyItem wantBuyItem : object) {
-
                         mainNewsesdataBuy.add(wantBuyItem);
-
                     }
                     mainNewsBuyAdapter.setData(mainNewsesdataBuy);
 
@@ -186,7 +183,6 @@ public class Fragment1_home extends BaseFragment {
         moudleAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(@NonNull View view, int adapterPosition) {
-//                Toast.makeText(getActivity(), "aaaaa" + adapterPosition, Toast.LENGTH_SHORT).show();
                 if (adapterPosition < MoudleLogo.length) {
                     MoudleItem item = (MoudleItem) data.get(adapterPosition);
                     //跳转到对应功能的详情页面

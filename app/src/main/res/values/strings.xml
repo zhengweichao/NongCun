@@ -94,8 +94,8 @@
     <string name="jump_signup">没有账号？创建一个</string>
     <!--发布页面-->
     <string name="push_title">信息标题</string>
-    <string name="select_mou_tip">请点击选择分类</string>
-    <string name="select_mou">请点击选择分类</string>
+    <string name="select_mou_tip">请点击输入框选择分类：</string>
+    <string name="select_mou">请选择分类</string>
     <string name="desc_push_sale">请认真填写产品介绍，才能让更多的客户联系您</string>
     <string name="push_pic">上传图片</string>
     <string name="push_price">产品价格:</string>

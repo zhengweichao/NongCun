@@ -1,19 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff">
+    android:background="#fff"
+    android:orientation="vertical">
 
     <!--<include layout="@layout/layout_title_bar" />-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp">
+
+        <Switch
+            android:checked="true"
+            android:id="@+id/switch_state_sound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:focusable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:lines="1"
+            android:text="语音帮助"
+            android:textColor="?android:attr/panelColorForeground"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <LinearLayout style="@style/common_horizontal_division_line_style" />
 
     <ListView
         android:id="@+id/lvScreen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
-        android:background="@color/white">
-    </ListView>
+        android:background="@color/white"></ListView>
 
     <LinearLayout style="@style/common_horizontal_division_line_style" />
 
@@ -22,10 +51,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@color/white">
-    </ListView>
+        android:background="@color/white"></ListView>
 
     <LinearLayout style="@style/common_horizontal_division_line_style" />
+
     <Button
         android:id="@+id/btn_my_logout"
         style="@style/style_button_logout"

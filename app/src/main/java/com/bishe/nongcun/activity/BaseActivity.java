@@ -1,5 +1,6 @@
 package com.bishe.nongcun.activity;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +19,8 @@ import butterknife.ButterKnife;
  */
 
 public abstract class BaseActivity extends FragmentActivity implements View.OnClickListener {
+
+    private MediaPlayer mediaPlayer;
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,15 +29,12 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         setContentView(getLayoutId());
         ButterKnife.bind(this);
 
-        //初始化View
         initView();
 
-        //初始化界面数据
         initData();
 
         registComBtn();
 
-        //绑定监听器与适配器
         initListener();
     }
 
@@ -95,4 +95,5 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
      */
     void processClick(View v) {
     }
+
 }

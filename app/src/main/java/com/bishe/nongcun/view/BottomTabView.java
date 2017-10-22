@@ -187,6 +187,8 @@ public class BottomTabView extends LinearLayout {
         void onTabItemSelect(int position);
     }
 
+
+
     /**
      * Item
      */

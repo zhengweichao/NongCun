@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,8 @@ public class Fragment3_buy extends BaseFragment {
     private String kind1;
     private String kind2;
     private String kind3;
+    private Spinner sp_unit;
+    private String wantbuyUnit = "斤";
 
     @Override
     protected View initView() {
@@ -45,6 +49,7 @@ public class Fragment3_buy extends BaseFragment {
         et_count = (EditText) inflate.findViewById(R.id.et_push_wantbuy_count);
         et_title = (EditText) inflate.findViewById(R.id.et_push_wantbuy_title);
         bt_push_enter = (Button) inflate.findViewById(R.id.bt_push_enter);
+        sp_unit = (Spinner) inflate.findViewById(R.id.sp_push_buy_unit);
         return inflate;
     }
 
@@ -73,11 +78,25 @@ public class Fragment3_buy extends BaseFragment {
 
     @Override
     public void initListener() {
+        sp_unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String[] units = getResources().getStringArray(R.array.units);
+                wantbuyUnit = units[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+        });
+
+
         bt_push_enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                // TODO: 2017/8/24 发布
                 String content = et_content.getText().toString().trim();
                 String count = et_count.getText().toString().trim();
                 String title = et_title.getText().toString().trim();
@@ -96,7 +115,7 @@ public class Fragment3_buy extends BaseFragment {
                 //注意：不能调用.setObjectId("")方法
                 MyUser user = BmobUser.getCurrentUser(MyUser.class);
                 wantBuyItem.setContent(content);
-                wantBuyItem.setCount(count);
+                wantBuyItem.setCount(count + wantbuyUnit);
                 wantBuyItem.setKind1(kind1);
                 wantBuyItem.setKind2(kind2);
                 wantBuyItem.setKind3(kind3);
@@ -112,6 +131,9 @@ public class Fragment3_buy extends BaseFragment {
                             LogUtils.e("创建数据成功：" + objectId);
                             initNull();
                             Intent intent = new Intent(mActivity, OKActivity.class);
+                            intent.putExtra("kind1", kind1);
+                            intent.putExtra("kind2", kind2);
+                            intent.putExtra("need", "price");
                             startActivity(intent);
                         } else {
                             LogUtils.e("失败：" + e.getMessage() + "," + e.getErrorCode());
