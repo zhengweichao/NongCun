@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.adapter.MySaleAdapter;
@@ -36,6 +37,8 @@ public class MySaleActivity extends BaseActivity {
 
     ArrayList<PriceItem> data;
     private MySaleAdapter mySaleAdapter;
+    private boolean tag = false;
+
 
     @Override
     int getLayoutId() {
@@ -47,35 +50,7 @@ public class MySaleActivity extends BaseActivity {
         mySaleAdapter = new MySaleAdapter();
         data = new ArrayList<>();
         rvMySale.setLayoutManager(new LinearLayoutManager(MySaleActivity.this));
-
-        BmobQuery<PriceItem> query = new BmobQuery<PriceItem>();
-        query.order("-createdAt");
-        query.addWhereEqualTo("author", BmobUser.getCurrentUser());
-        //返回6条数据，如果不加上这条语句，默认返回10条数据
-        query.setLimit(50);
-        // 希望在查询帖子信息的同时也把发布人的信息查询出来
-        query.include("author");
-        //执行查询方法
-        query.findObjects(new FindListener<PriceItem>() {
-            @Override
-            public void done(List<PriceItem> object, BmobException e) {
-                if (e == null) {
-                    LogUtils.e("查询成功：共" + object.size() + "条数据。");
-                    for (PriceItem priceItem : object) {
-                        data.add(priceItem);
-                    }
-
-                    mySaleAdapter.setData(data);
-                    rvMySale.setAdapter(mySaleAdapter);
-
-                } else {
-                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                }
-            }
-        });
-
     }
-
 
     @Override
     void initListener() {
@@ -102,22 +77,54 @@ public class MySaleActivity extends BaseActivity {
                         .create();
                 dialog.show();
 
-
                 return true;
             }
 
         });
-    }
 
-    @Override
-    void initData() {
-//        最近报价条目点击跳转
+        //        最近报价条目点击跳转
         mySaleAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(@NonNull View view, int adapterPosition) {
                 Intent intent = new Intent(MySaleActivity.this, FoodDetailActivity.class);
                 intent.putExtra("newprice", data.get(adapterPosition));
                 startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    void initData() {
+        BmobQuery<PriceItem> query = new BmobQuery<PriceItem>();
+        query.order("-createdAt");
+        query.addWhereEqualTo("author", BmobUser.getCurrentUser());
+        query.setLimit(10);
+        // 希望在查询的同时也把发布人的信息查询出来
+        query.include("author");
+        //执行查询方法
+        query.findObjects(new FindListener<PriceItem>() {
+            @Override
+            public void done(List<PriceItem> object, BmobException e) {
+                if (e == null) {
+                    LogUtils.e("查询成功：共" + object.size() + "条数据。");
+                    data.clear();
+                    for (PriceItem priceItem : object) {
+                        data.add(priceItem);
+                    }
+
+                    if (mySaleAdapter == null) {
+                        mySaleAdapter = new MySaleAdapter();
+                    }
+                    mySaleAdapter.setData(data);
+                    if (!tag) {
+                        rvMySale.setAdapter(mySaleAdapter);
+                    }else{
+                        mySaleAdapter.notifyDataSetChanged();
+                    }
+
+                } else {
+                    LogUtils.e("失败：" + e.getMessage() + "," + e.getErrorCode());
+                }
             }
         });
 
@@ -132,22 +139,23 @@ public class MySaleActivity extends BaseActivity {
 
         PriceItem query = new PriceItem();
         query.setObjectId(Objectid);
-        //返回6条数据，如果不加上这条语句，默认返回10条数据
-        //执行查询方法
+        //执行删除
+        //执行删除
         query.delete(new UpdateListener() {
             @Override
             public void done(BmobException e) {
-
                 if (e == null) {
                     LogUtils.e("删除成功");
+                    Toast.makeText(MySaleActivity.this, "删除成功！", Toast.LENGTH_SHORT).show();
+                    tag=true;
+                    initData();
                 } else {
                     LogUtils.e("删除失败" + e);
+                    Toast.makeText(MySaleActivity.this, "删除失败，请稍后尝试！", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
     }
-
 
 }

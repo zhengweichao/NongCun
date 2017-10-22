@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.adapter.MyPushAdapter;
@@ -32,6 +33,7 @@ public class MyPushActivity extends BaseActivity {
     RecyclerView rvMyPush;
     ArrayList<WantBuyItem> data;
     private MyPushAdapter myPushAdapter;
+    private boolean tag = false;
 
     @Override
     int getLayoutId() {
@@ -43,11 +45,14 @@ public class MyPushActivity extends BaseActivity {
         myPushAdapter = new MyPushAdapter();
         data = new ArrayList<>();
         rvMyPush.setLayoutManager(new LinearLayoutManager(MyPushActivity.this));
+    }
 
+    @Override
+    void initData() {
         BmobQuery<WantBuyItem> query = new BmobQuery<WantBuyItem>();
         query.order("-createdAt");
         query.addWhereEqualTo("author", BmobUser.getCurrentUser());
-        query.setLimit(50);
+        query.setLimit(10);
         query.include("author");
         //执行查询方法
         query.findObjects(new FindListener<WantBuyItem>() {
@@ -55,12 +60,20 @@ public class MyPushActivity extends BaseActivity {
             @Override
             public void done(List<WantBuyItem> object, BmobException e) {
                 if (e == null) {
+                    data.clear();
                     LogUtils.e("查询成功：共" + object.size() + "条数据。");
                     for (WantBuyItem wantBuyItem : object) {
                         data.add(wantBuyItem);
                     }
+                    if (myPushAdapter == null) {
+                        myPushAdapter = new MyPushAdapter();
+                    }
                     myPushAdapter.setData(data);
-                    rvMyPush.setAdapter(myPushAdapter);
+                    if (!tag) {
+                        rvMyPush.setAdapter(myPushAdapter);
+                    } else {
+                        myPushAdapter.notifyDataSetChanged();
+                    }
                 } else {
                     Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
                 }
@@ -71,8 +84,8 @@ public class MyPushActivity extends BaseActivity {
     }
 
     @Override
-    void initData() {
-//        最近报价条目点击跳转
+    void initListener() {
+        //        最近报价条目点击跳转
         myPushAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(@NonNull View view, int adapterPosition) {
@@ -104,16 +117,16 @@ public class MyPushActivity extends BaseActivity {
                         .setIcon(R.mipmap.ic_launcher)
                         .create();
                 dialog.show();
-
-
                 return true;
             }
 
         });
+
     }
 
     /**
      * 删除发布信息
+     *
      * @param Objectid
      */
     private void DelMyPush(String Objectid) {
@@ -126,16 +139,19 @@ public class MyPushActivity extends BaseActivity {
             @Override
             public void done(BmobException e) {
 
-                if(e==null){
+                if (e == null) {
                     LogUtils.e("删除成功");
-                }else{
-                    LogUtils.e("删除失败"+e);
+                    Toast.makeText(MyPushActivity.this, "删除成功！", Toast.LENGTH_SHORT).show();
+                    tag=true;
+                    initData();
+                } else {
+                    LogUtils.e("删除失败" + e);
+                    Toast.makeText(MyPushActivity.this, "删除失败，请稍后尝试！", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
 
     }
-
 
 }
