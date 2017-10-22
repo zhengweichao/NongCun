@@ -3,6 +3,7 @@ package com.bishe.nongcun.activity;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.widget.Toast;
+
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.fragment.Fragment1_home;
 import com.bishe.nongcun.fragment.Fragment2_sale;

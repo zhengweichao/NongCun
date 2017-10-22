@@ -2,9 +2,7 @@ package com.bishe.nongcun.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,9 +12,9 @@ import android.widget.Toast;
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.bean.MyUser;
 import com.bishe.nongcun.utils.LogUtils;
+import com.bishe.nongcun.utils.StringUtils;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.exception.BmobException;
@@ -27,7 +25,6 @@ import cn.bmob.v3.listener.SaveListener;
  * 注册页面
  */
 public class SignupActivity extends BaseActivity {
-    private static final String TAG = "SignupActivity";
 
     @Bind(R.id.input_name)
     EditText _nameText;
@@ -52,12 +49,6 @@ public class SignupActivity extends BaseActivity {
     }
 
     @Override
-    void initListener() {
-        _signupButton.setOnClickListener(this);
-        _loginLink.setOnClickListener(this);
-    }
-
-    @Override
     void processClick(View v) {
         switch (v.getId()) {
             case R.id.btn_signup:
@@ -75,8 +66,6 @@ public class SignupActivity extends BaseActivity {
     }
 
     public void signup() {
-        Log.d(TAG, "Signup");
-
         String code = inputYanzheng.getText().toString();
         if (!validate()) {
             onSignupFailed();
@@ -188,7 +177,7 @@ public class SignupActivity extends BaseActivity {
             _nameText.setError(null);
         }
 
-        if (mobile.isEmpty()) {
+        if (!StringUtils.checkPhone(mobile)) {
             _mobileText.setError("请输入有效的手机号");
             valid = false;
         } else {
@@ -202,7 +191,6 @@ public class SignupActivity extends BaseActivity {
             _passwordText.setError(null);
         }
 
-
         if (reEnterPassword.isEmpty() || !(reEnterPassword.equals(password))) {
             _reEnterPasswordText.setError("两次密码输入不一致");
             valid = false;
@@ -213,7 +201,7 @@ public class SignupActivity extends BaseActivity {
         return valid;
     }
 
-    private CountDownTimer countDownTimer = new CountDownTimer(6800, 1000) {
+    private CountDownTimer countDownTimer = new CountDownTimer(60800, 1000) {
 
         @Override
         public void onTick(long millisUntilFinished) {
@@ -227,30 +215,43 @@ public class SignupActivity extends BaseActivity {
         }
     };
 
-    @OnClick(R.id.btn_getcode)
-    public void onViewClicked() {
-        btnGetcode.setEnabled(false);
-        if (!validate()) {
-            Toast.makeText(this, "信息不完善！", Toast.LENGTH_SHORT).show();
-            btnGetcode.setEnabled(true);
-            return;
-        }
-        countDownTimer.start();
-        String username = _nameText.getText().toString();
-        String mobile = _mobileText.getText().toString();
-        String password = _passwordText.getText().toString();
-
-        // TODO: 2017/9/7 获取验证码
-        BmobSMS.requestSMSCode(mobile, "城农通", new QueryListener<Integer>() {
-            @Override
-            public void done(Integer smsId, BmobException ex) {
-                if (ex == null) {//验证码发送成功
-                    LogUtils.e("验证码发送成功,短信id：" + smsId);//用于查询本次短信发送详情
-                    Toast.makeText(SignupActivity.this, "验证码已发送，请注意查收", Toast.LENGTH_SHORT).show();
+    @OnClick({R.id.btn_getcode, R.id.btn_signup, R.id.link_login})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_getcode:
+                btnGetcode.setEnabled(false);
+                if (!validate()) {
+                    Toast.makeText(this, "信息不完善！", Toast.LENGTH_SHORT).show();
+                    btnGetcode.setEnabled(true);
+                    return;
                 }
-            }
-        });
+                countDownTimer.start();
+                String username = _nameText.getText().toString();
+                String mobile = _mobileText.getText().toString();
+                String password = _passwordText.getText().toString();
 
+                // TODO: 2017/9/7 获取验证码
+                BmobSMS.requestSMSCode(mobile, "城农通", new QueryListener<Integer>() {
+                    @Override
+                    public void done(Integer smsId, BmobException ex) {
+                        if (ex == null) {//验证码发送成功
+                            LogUtils.e("验证码发送成功,短信id：" + smsId);//用于查询本次短信发送详情
+                            Toast.makeText(SignupActivity.this, "验证码已发送，请注意查收", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
+                break;
+            case R.id.btn_signup:
+                signup();
+                break;
+            case R.id.link_login:
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                break;
+
+        }
     }
 }

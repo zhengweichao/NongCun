@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:scrollbars="none"
+    android:layout_height="wrap_content"
     tools:context="com.bishe.nongcun.activity.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#feffff"
         android:orientation="vertical">
-
-        <!--<include-->
-        <!--layout="@layout/layout_title_bar" />-->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:overScrollMode="never">
-
-        </android.support.v7.widget.RecyclerView>
+            android:overScrollMode="never" />
 
         <TextView
             android:id="@+id/v_divier"
@@ -32,13 +27,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:orientation="vertical">
-
-            <!--<include layout="@layout/price_divier" />-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -75,11 +68,13 @@
                 android:layout_marginTop="3dp"
                 android:background="#8a8b8b" />
 
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_main_newprice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:overScrollMode="never"></android.support.v7.widget.RecyclerView>
+                android:overScrollMode="never" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -123,23 +118,23 @@
 
             </LinearLayout>
 
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_main_newbuy"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:overScrollMode="never">
+                android:layout_height="220dp"
+                android:overScrollMode="never" />
 
-            </android.support.v7.widget.RecyclerView>
-            <Button
-                android:id="@+id/btn_main_look_all"
-                style="@style/style_button_logout"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_margin="16dp"
-                android:text="浏览全部内容" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/btn_main_look_all"
+            style="@style/style_button_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="浏览全部内容" />
     </LinearLayout>
+
 </ScrollView>

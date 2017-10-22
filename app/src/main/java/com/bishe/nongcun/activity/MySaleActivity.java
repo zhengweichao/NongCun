@@ -12,7 +12,6 @@ import android.view.View;
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.adapter.MySaleAdapter;
 import com.bishe.nongcun.bean.PriceItem;
-import com.bishe.nongcun.bean.WantBuyItem;
 import com.bishe.nongcun.utils.LogUtils;
 
 import java.util.ArrayList;
@@ -27,6 +26,9 @@ import cn.bmob.v3.listener.UpdateListener;
 import xyz.zpayh.adapter.OnItemClickListener;
 import xyz.zpayh.adapter.OnItemLongClickListener;
 
+/**
+ * 我的出售
+ */
 public class MySaleActivity extends BaseActivity {
 
     @Bind(R.id.rv_my_sale)
@@ -114,7 +116,7 @@ public class MySaleActivity extends BaseActivity {
             @Override
             public void onItemClick(@NonNull View view, int adapterPosition) {
                 Intent intent = new Intent(MySaleActivity.this, FoodDetailActivity.class);
-                intent.putExtra("newprice",data.get(adapterPosition));
+                intent.putExtra("newprice", data.get(adapterPosition));
                 startActivity(intent);
             }
         });
@@ -123,6 +125,7 @@ public class MySaleActivity extends BaseActivity {
 
     /**
      * 删除发布信息
+     *
      * @param Objectid
      */
     private void DelMyPush(String Objectid) {
@@ -135,17 +138,16 @@ public class MySaleActivity extends BaseActivity {
             @Override
             public void done(BmobException e) {
 
-                if(e==null){
+                if (e == null) {
                     LogUtils.e("删除成功");
-                }else{
-                    LogUtils.e("删除失败"+e);
+                } else {
+                    LogUtils.e("删除失败" + e);
                 }
 
             }
         });
 
     }
-
 
 
 }

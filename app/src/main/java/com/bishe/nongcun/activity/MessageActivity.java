@@ -86,7 +86,7 @@ public class MessageActivity extends Activity {
                         public void onFail(String errmsg, String msg) {
                             switch (errmsg) {
                                 case CONFIG.ERRMSG_401:
-//                                    startAtyDevice();
+
                                     break;
                                 default:
                                     Message message = new Message(msg, Message.RECEIVER, getTime());

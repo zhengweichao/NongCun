@@ -16,7 +16,6 @@ import com.bishe.nongcun.ui.ChatActivity;
 import com.bishe.nongcun.utils.LogUtils;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMConversation;
@@ -55,9 +54,8 @@ public class WantBuyDetailActivity extends BaseActivity {
     @Override
     void initView() {
         wantbuy = (WantBuyItem) getIntent().getExtras().get("wantbuy");
-        LogUtils.e(wantbuy.getCreatedAt().toString());
         tvWantbuyTitle.setText("求购：" + wantbuy.getTitle());
-        tvWantbuyKind.setText("求购品种：" + wantbuy.getKind1() + "-" + wantbuy.getKind2() + "-" + wantbuy.getKind3() + "-");
+        tvWantbuyKind.setText("求购品种：" + wantbuy.getKind1() + "-" + wantbuy.getKind2() + "-" + wantbuy.getKind3());
         tvWantbuyCount.setText("求购数量：" + wantbuy.getCount());
         tvWantbuyTime.setText("求购时间：" + wantbuy.getCreatedAt().substring(5, 7) + "月" +
                 wantbuy.getCreatedAt().substring(8, 10) + "日");
@@ -71,7 +69,6 @@ public class WantBuyDetailActivity extends BaseActivity {
     void initData() {
 
     }
-
 
     @OnClick({R.id.bt_want_buy_tel, R.id.bt_want_buy_im})
     public void onViewClicked(View view) {
@@ -90,13 +87,13 @@ public class WantBuyDetailActivity extends BaseActivity {
                 break;
             case R.id.bt_want_buy_im:
                 MyUser user = wantbuy.getAuthor();
-                LogUtils.e("开始im:"+user.getObjectId() );
-                BmobIMUserInfo info = new BmobIMUserInfo(user.getObjectId(), user.getUsername(),null);
+                LogUtils.e("开始im:" + user.getObjectId());
+                BmobIMUserInfo info = new BmobIMUserInfo(user.getObjectId(), user.getUsername(), null);
                 BmobIMConversation conversationEntrance = BmobIM.getInstance().startPrivateConversation(info, null);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("c", conversationEntrance);
-                Intent intent = new Intent(WantBuyDetailActivity.this,ChatActivity.class);
-                intent.putExtra(WantBuyDetailActivity.this.getPackageName(),bundle);
+                Intent intent = new Intent(WantBuyDetailActivity.this, ChatActivity.class);
+                intent.putExtra(WantBuyDetailActivity.this.getPackageName(), bundle);
                 startActivity(intent);
                 break;
         }

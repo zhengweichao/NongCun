@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import butterknife.ButterKnife;
+
 /**
  * @ 创建时间: 2017/5/14 on 14:20.
  * @ 描述：BaseFragment基类
@@ -30,6 +32,7 @@ public abstract  class BaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =initView();
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -53,6 +56,10 @@ public abstract  class BaseFragment extends Fragment {
      */
     public  abstract void initListener();
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 
 }

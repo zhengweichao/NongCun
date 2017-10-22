@@ -89,8 +89,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:hint="输入手机收到的验证码"
-                android:inputType="textPassword" />
+                android:hint="输入手机收到的验证码" />
 
             <Button
                 android:id="@+id/btn_getcode"

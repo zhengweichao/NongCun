@@ -76,8 +76,8 @@ public class MyPushActivity extends BaseActivity {
         myPushAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(@NonNull View view, int adapterPosition) {
-                Intent intent = new Intent(MyPushActivity.this, FoodDetailActivity.class);
-                intent.putExtra("newprice", data.get(adapterPosition));
+                Intent intent = new Intent(MyPushActivity.this, WantBuyDetailActivity.class);
+                intent.putExtra("wantbuy", data.get(adapterPosition));
                 startActivity(intent);
             }
         });

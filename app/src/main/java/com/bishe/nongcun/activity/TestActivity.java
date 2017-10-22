@@ -46,7 +46,7 @@ public class TestActivity extends Activity {
 //TODO 连接：3.1、登录成功、注册成功或处于登录状态重新打开应用后执行连接IM服务器的操作
 /*        MyUser user = BmobUser.getCurrentUser(MyUser.class);
 
-        if (!TextUtils.isEmpty(user.getObjectId())) {
+        if (!StringUtils.isEmpty(user.getObjectId())) {
             BmobIM.connect(user.getObjectId(), new ConnectListener() {
                 @Override
                 public void done(String uid, BmobException e) {

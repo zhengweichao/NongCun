@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -76,7 +76,6 @@
     <style name="transparentFrameWindowStyle">
         <item name="android:windowBackground">@drawable/photo_choose_bg</item>
     </style>
-
 
 
     <style name="AppTheme.NoActionBar">

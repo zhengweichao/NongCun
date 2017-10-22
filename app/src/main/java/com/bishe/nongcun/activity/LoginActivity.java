@@ -2,73 +2,49 @@ package com.bishe.nongcun.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.util.Log;
+import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bishe.nongcun.bean.MyUser;
-import com.bishe.nongcun.utils.CONFIG;
 import com.bishe.nongcun.R;
-import com.bishe.nongcun.bean.JsonLoginBean;
+import com.bishe.nongcun.bean.MyUser;
 import com.bishe.nongcun.utils.LogUtils;
-import com.google.gson.Gson;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
+import com.bishe.nongcun.utils.StringUtils;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-import okhttp3.Call;
-import okhttp3.Response;
+import cn.bmob.v3.listener.LogInListener;
 
 public class LoginActivity extends BaseActivity {
-    private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
 
     @Bind(R.id.et_username)
-    EditText et_username;
+    EditText et_phone;
     @Bind(R.id.et_password)
     EditText et_password;
     @Bind(R.id.btn_login)
     Button _loginButton;
     @Bind(R.id.link_signup)
     TextView _signupLink;
+    private String phone;
+    private String password;
 
     @Override
     int getLayoutId() {
         return R.layout.activity_login;
     }
 
-    @Override
-    void initListener() {
-        _loginButton.setOnClickListener(this);
-        _signupLink.setOnClickListener(this);
-    }
-
-    @Override
-    void processClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_login:
-                login();
-                break;
-            case R.id.link_signup:
-                // Start the Signup activity
-                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);
-                finish();
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-                break;
-            default:
-                break;
-        }
-    }
-
     public void login() {
-        Log.d(TAG, "Login");
-
         if (!validate()) {
             onLoginFailed();
             return;
@@ -82,16 +58,28 @@ public class LoginActivity extends BaseActivity {
         progressDialog.setMessage("登录中...");
         progressDialog.show();
 
-        //获取输入内容
-        String username = et_username.getText().toString().trim();
-        String password = et_password.getText().toString().trim();
+        // 手机号登录
+        BmobUser.loginByAccount(phone, password, new LogInListener<MyUser>() {
+            @Override
+            public void done(MyUser user, BmobException e) {
+                if (user != null) {
+                    LogUtils.e("登录成功:");
+                    onLoginSuccess();
+                    progressDialog.dismiss();
+                } else {
+                    LogUtils.e("登录失败");
+                    onLoginFailed();
+                    progressDialog.dismiss();
+                }
+            }
+        });
 
-        //联网，获取数据
+       /*  //联网，获取数据
         MyUser myUser = new MyUser();
         myUser.setUsername(username);
         myUser.setPassword(password);
-        myUser.login(new SaveListener<MyUser>() {
 
+       myUser.login(new SaveListener<MyUser>() {
             @Override
             public void done(MyUser bmobUser, BmobException e) {
                 if(e==null){
@@ -107,38 +95,13 @@ public class LoginActivity extends BaseActivity {
                     progressDialog.dismiss();
                 }
             }
-        });
-
-        /*OkGo.get(CONFIG.URL_LOGIN)
-                .params("username", username)
-                .params("password", password)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
-                        Gson gson = new Gson();
-
-                        JsonLoginBean jsonLoginBean = gson.fromJson(s, JsonLoginBean.class);
-                        //如果得到权限>0,则登录成功。
-                        if (jsonLoginBean.getPermission() > 0) {
-                            Log.e("zwc", "onSuccess: ===");
-                            onLoginSuccess();
-                            progressDialog.dismiss();
-                        } else {
-                            onLoginFailed();
-                            progressDialog.dismiss();
-                        }
-
-                    }
-                });*/
+        });*/
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
-
-                // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
                 this.finish();
             }
         }
@@ -146,7 +109,6 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        // Disable going back to the MainActivity
         moveTaskToBack(true);
     }
 
@@ -158,22 +120,20 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "登陆失败", Toast.LENGTH_LONG).show();
-
+        Toast.makeText(LoginActivity.this, "登陆失败", Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
     }
 
     public boolean validate() {
         boolean valid = true;
 
-        String email = et_username.getText().toString();
-        String password = et_password.getText().toString();
-
-        if (email.isEmpty()) {
-            et_username.setError("请输入有效账号");
+        phone = et_phone.getText().toString();
+        password = et_password.getText().toString();
+        if (!StringUtils.checkPhone(phone)) {
+            et_phone.setError("请输入正确手机号");
             valid = false;
         } else {
-            et_username.setError(null);
+            et_phone.setError(null);
         }
 
         if (password.isEmpty()) {
@@ -184,5 +144,20 @@ public class LoginActivity extends BaseActivity {
         }
 
         return valid;
+    }
+
+    @OnClick({R.id.btn_login, R.id.link_signup})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_login:
+                login();
+                break;
+            case R.id.link_signup:
+                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+                startActivityForResult(intent, REQUEST_SIGNUP);
+                finish();
+                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                break;
+        }
     }
 }
