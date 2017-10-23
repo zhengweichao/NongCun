@@ -97,7 +97,6 @@ public class UserInfoActivity extends BaseActivity {
                 }
             });
 
-
         } else {
             //缓存用户对象为空时， 可打开用户注册界面…
             Toast.makeText(this, "登录已经过期，请重新登录", Toast.LENGTH_SHORT).show();
@@ -186,7 +185,6 @@ public class UserInfoActivity extends BaseActivity {
                         String username = new_username.getText().toString();
                         if (TextUtils.isEmpty(address) || TextUtils.isEmpty(username)) {
                             Toast.makeText(UserInfoActivity.this, "信息不能为空", Toast.LENGTH_SHORT).show();
-
                         } else {
                             UpdateInfo();
                         }

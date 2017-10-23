@@ -28,7 +28,6 @@ import butterknife.OnClick;
 import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMConversation;
 import cn.bmob.newim.bean.BmobIMUserInfo;
-import cn.bmob.v3.BmobUser;
 
 public class FoodDetailActivity extends BaseActivity {
 
@@ -56,6 +55,8 @@ public class FoodDetailActivity extends BaseActivity {
     ImageView ivDetailFoods3;
     @Bind(R.id.bt_detail_foods_im)
     Button btDetailFoodsIm;
+    @Bind(R.id.tv_detail_foods_count)
+    TextView tvDetailFoodsCount;
     private PriceItem newprice;
 
     @Override
@@ -105,6 +106,12 @@ public class FoodDetailActivity extends BaseActivity {
 
     @Override
     void initData() {
+        if (!TextUtils.isEmpty(newprice.getCount())) {
+            tvDetailFoodsCount.setText("产品数量："+newprice.getCount());
+        } else {
+            tvDetailFoodsCount.setVisibility(View.GONE);
+        }
+
         tvDetailFoodsName.setText(newprice.getTitle());
         tvDetailFoodsArea.setText("地区：" + newprice.getAuthor().getAddress());
         tvDetailFoodsDesc.setText(newprice.getContent());
@@ -120,7 +127,7 @@ public class FoodDetailActivity extends BaseActivity {
 //                .centerCrop()                             //完全填充
                     .fitCenter()
                     .into(ivDetailFoods1);
-        }else{
+        } else {
             ivDetailFoods1.setVisibility(View.GONE);
         }
         if (newprice.getPic2() != null) {
@@ -130,7 +137,7 @@ public class FoodDetailActivity extends BaseActivity {
                     .placeholder(R.mipmap.default_image)     //设置占位图片
                     .fitCenter()                            //完全显示
                     .into(ivDetailFoods2);
-        }else{
+        } else {
             ivDetailFoods2.setVisibility(View.GONE);
         }
         if (newprice.getPic3() != null) {
@@ -140,7 +147,7 @@ public class FoodDetailActivity extends BaseActivity {
                     .placeholder(R.mipmap.default_image)     //设置占位图片
                     .fitCenter()                            //完全显示
                     .into(ivDetailFoods3);
-        }else{
+        } else {
             ivDetailFoods3.setVisibility(View.GONE);
         }
 
@@ -188,4 +195,6 @@ public class FoodDetailActivity extends BaseActivity {
                 break;
         }
     }
+
+
 }

@@ -110,7 +110,7 @@
                     android:textSize="20sp" />
 
                 <Spinner
-                    android:id="@+id/sp_push_sale_unites"
+                    android:id="@+id/sp_push_sale_count_unites"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"

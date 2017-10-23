@@ -114,6 +114,7 @@
             android:value="80c67b4c1ceca9635ef33bc3248debca" />
 
         <activity android:name=".activity.ConversationActivity" />
+        <activity android:name=".activity.ResultActivity"></activity>
     </application>
 
 </manifest>

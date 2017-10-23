@@ -14,6 +14,7 @@ import cn.bmob.v3.datatype.BmobFile;
 public class PriceItem extends BmobObject implements Serializable {
     private String title;
     private String content;
+    private String count;
     private MyUser author;
     private String kind1;
     private String kind2;
@@ -23,6 +24,14 @@ public class PriceItem extends BmobObject implements Serializable {
     private BmobFile pic1;
     private BmobFile pic2;
     private BmobFile pic3;
+
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
+    }
 
     public BmobFile getPic1() {
         return pic1;

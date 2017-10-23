@@ -1,6 +1,7 @@
 package com.bishe.nongcun.fragment;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
@@ -61,8 +64,8 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
     EditText etPushSaleDesc;
     @Bind(R.id.et_push_sale_count)
     EditText etPushSaleCount;
-    @Bind(R.id.sp_push_sale_unites)
-    Spinner spPushSaleUnites;
+    @Bind(R.id.sp_push_sale_count_unites)
+    Spinner spPushSaleCountUnites;
     @Bind(R.id.et_push_sale_price)
     EditText etPushSalePrice;
     @Bind(R.id.sp_push_sale_unit)
@@ -76,6 +79,7 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
     public static final int REQUEST_CODE_SELECT = 100;
     public static final int REQUEST_CODE_PREVIEW = 101;
 
+
     private ImagePickerAdapter adapter;
     private ArrayList<ImageItem> selImageList; //当前选择的所有图片
     private int maxImgCount = 3;               //允许选择图片最大数
@@ -84,11 +88,13 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
     private String kind2;
     private String kind3;
 
-    private String priceUnit = "/斤";
+    private String priceCountUnit = "/斤";
+    private String priceUnit = "斤";
     private ArrayList<String> photos;
     String[] filePaths;
 
     private String title;
+    private String count;
     private String price;
     private String desc;
 
@@ -158,6 +164,19 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
 
             }
         });
+        spPushSaleCountUnites.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String[] unites = getResources().getStringArray(R.array.unites);
+                priceCountUnit = unites[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
     /**
@@ -167,7 +186,7 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
      */
     private void initLuban(List<String> paths) {
         photos = new ArrayList<>();
-        filePaths=new String[selImageList.size()];
+        filePaths = new String[selImageList.size()];
         Luban.with(mActivity)
                 .load(paths)                                   // 传入要压缩的图片列表
                 .ignoreBy(100)                                  // 忽略不压缩图片的大小
@@ -238,7 +257,7 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
                         @Override
                         public void done(String objectId, BmobException e) {
                             if (e == null) {
-                                LogUtils.e("上传成功……"+ objectId);
+                                LogUtils.e("上传成功……" + objectId);
                                 Toast.makeText(mActivity, "发布出售成功", Toast.LENGTH_SHORT).show();
                                 initNull();
                                 Intent intent = new Intent(mActivity, OKActivity.class);
@@ -390,8 +409,9 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
         desc = etPushSaleDesc.getText().toString().trim();
         price = etPushSalePrice.getText().toString().trim();
         title = etPushSaleTitle.getText().toString().trim();
+        count = etPushSaleCount.getText().toString().trim();
 
-        if (TextUtils.isEmpty(desc) || TextUtils.isEmpty(price) || TextUtils.isEmpty(title)) {
+        if (TextUtils.isEmpty(desc) || TextUtils.isEmpty(price) || TextUtils.isEmpty(title) || TextUtils.isEmpty(count)) {
             Toast.makeText(mActivity, "请您完整地填写信息", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -400,6 +420,7 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
             Toast.makeText(mActivity, "请选择分类", Toast.LENGTH_SHORT).show();
             return;
         }
+
 
 /*        if (selImageList.size() != 3) {
             Toast.makeText(mActivity, "请选择3张图片", Toast.LENGTH_SHORT).show();
@@ -426,6 +447,7 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
         priceItem.setAuthor(user);
         priceItem.setTitle(title);
         priceItem.setContent(desc);
+        priceItem.setCount(count + priceCountUnit);
         priceItem.setPrice(price + "元" + priceUnit);
         priceItem.setKind1(kind1);
         priceItem.setKind2(kind2);
@@ -435,7 +457,7 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
             @Override
             public void done(String objectId, BmobException e) {
                 if (e == null) {
-                    LogUtils.e("发布成功……"+ objectId);
+                    LogUtils.e("发布成功……" + objectId);
                     Toast.makeText(mActivity, "发布出售成功", Toast.LENGTH_SHORT).show();
                     initNull();
                     Intent intent = new Intent(mActivity, OKActivity.class);
@@ -452,5 +474,6 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
             }
         });
     }
+
 
 }

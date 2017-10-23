@@ -46,6 +46,13 @@
                     android:text="单价：1.00元/斤"
                     android:textColor="#f00"
                     android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/tv_detail_foods_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="7dp"
+                    android:text="数量：100斤"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_detail_foods_tel"
