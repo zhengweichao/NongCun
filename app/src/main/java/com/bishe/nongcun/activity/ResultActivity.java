@@ -1,6 +1,8 @@
 package com.bishe.nongcun.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -23,6 +25,7 @@ import butterknife.ButterKnife;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import xyz.zpayh.adapter.OnItemClickListener;
 
 public class ResultActivity extends BaseActivity {
 
@@ -87,6 +90,16 @@ public class ResultActivity extends BaseActivity {
                     myPushAdapter.setData(wantBuyItems);
                     rvResultWantbuy.setAdapter(myPushAdapter);
                     LogUtils.e("初始化加载完毕");
+
+                    myPushAdapter.setOnItemClickListener(new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(@NonNull View view, int adapterPosition) {
+                            Intent intent = new Intent(ResultActivity.this, WantBuyDetailActivity.class);
+                            intent.putExtra("wantbuy", wantBuyItems.get(adapterPosition));
+                            startActivity(intent);
+                        }
+                    });
+
                     LoadDialog.dismiss(ResultActivity.this);
                 } else {
                     Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
@@ -123,6 +136,14 @@ public class ResultActivity extends BaseActivity {
                         priceItems.add(priceItem);
                     }
                     mySaleAdapter.setData(priceItems);
+                    mySaleAdapter.setOnItemClickListener(new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(@NonNull View view, int position) {
+                            Intent intent = new Intent(ResultActivity.this, FoodDetailActivity.class);
+                            intent.putExtra("newprice", priceItems.get(position));
+                            startActivity(intent);
+                        }
+                    });
                     rvResultPrice.setAdapter(mySaleAdapter);
                     LoadDialog.dismiss(ResultActivity.this);
                 } else {

@@ -11,19 +11,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bishe.nongcun.R;
+import com.bishe.nongcun.bean.MyInstallation;
 import com.bishe.nongcun.bean.MyUser;
 import com.bishe.nongcun.utils.LogUtils;
 import com.bishe.nongcun.utils.StringUtils;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.BmobInstallationManager;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
+import rx.functions.Action1;
 
 public class LoginActivity extends BaseActivity {
     private static final int REQUEST_SIGNUP = 0;
@@ -64,6 +70,7 @@ public class LoginActivity extends BaseActivity {
             public void done(MyUser user, BmobException e) {
                 if (user != null) {
                     LogUtils.e("登录成功:");
+                    modifyInstallationUser(user);
                     onLoginSuccess();
                     progressDialog.dismiss();
                 } else {
@@ -145,6 +152,49 @@ public class LoginActivity extends BaseActivity {
 
         return valid;
     }
+
+    /**
+     * 修改设备表的用户信息：先查询设备表中的数据，再修改数据中用户信息
+     * @param user
+     */
+    private void modifyInstallationUser(final MyUser user) {
+        BmobQuery<MyInstallation> bmobQuery = new BmobQuery<>();
+        final String id = BmobInstallationManager.getInstallationId();
+        bmobQuery.addWhereEqualTo("installationId", id);
+        bmobQuery.findObjectsObservable(MyInstallation.class)
+                .subscribe(new Action1<List<MyInstallation>>() {
+                    @Override
+                    public void call(List<MyInstallation> installations) {
+
+                        if (installations.size() > 0) {
+                            MyInstallation installation = installations.get(0);
+                            installation.setMyuser(user);
+                            installation.updateObservable()
+                                    .subscribe(new Action1<Void>() {
+                                        @Override
+                                        public void call(Void aVoid) {
+                                            LogUtils.e("更新设备用户信息成功！");
+                                        }
+                                    }, new Action1<Throwable>() {
+                                        @Override
+                                        public void call(Throwable throwable) {
+                                            LogUtils.e("更新设备用户信息失败：" + throwable.getMessage());
+                                        }
+                                    });
+
+                        } else {
+                            LogUtils.e("后台不存在此设备Id的数据，请确认此设备Id是否正确！\n" + id);
+                        }
+
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtils.e("查询设备数据失败：" + throwable.getMessage());
+                    }
+                });
+    }
+
 
     @OnClick({R.id.btn_login, R.id.link_signup})
     public void onViewClicked(View view) {

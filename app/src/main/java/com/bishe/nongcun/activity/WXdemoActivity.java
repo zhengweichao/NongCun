@@ -31,7 +31,8 @@ import java.util.List;
  * 修订历史：微信图片选择的Adapter, 感谢 ikkong 的提交
  * ================================================
  */
-public class WXdemoActivity extends AppCompatActivity implements ImagePickerAdapter.OnRecyclerViewItemClickListener {
+public class
+WXdemoActivity extends AppCompatActivity implements ImagePickerAdapter.OnRecyclerViewItemClickListener {
 
     public static final int IMAGE_ITEM_ADD = -1;
     public static final int REQUEST_CODE_SELECT = 100;

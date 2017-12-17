@@ -1,5 +1,8 @@
 package com.bishe.nongcun.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -30,6 +33,7 @@ import android.widget.Toast;
 
 
 import com.bishe.nongcun.R;
+import com.bishe.nongcun.activity.LoginActivity;
 import com.bishe.nongcun.adapter0.ChatAdapter;
 import com.bishe.nongcun.adapter0.OnRecyclerViewListener;
 import com.bishe.nongcun.base.ParentWithNaviActivity;
@@ -61,6 +65,7 @@ import cn.bmob.newim.listener.MessageSendListener;
 import cn.bmob.newim.listener.MessagesQueryListener;
 import cn.bmob.newim.listener.OnRecordChangeListener;
 import cn.bmob.newim.notification.BmobNotificationManager;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 
 /**
@@ -117,6 +122,7 @@ public class ChatActivity extends ParentWithNaviActivity implements MessageListH
     ChatAdapter adapter;
     protected LinearLayoutManager layoutManager;
     BmobIMConversation mConversationManager;
+    private AlertDialog mdialog;
 
     @Override
     protected String title() {
@@ -169,10 +175,25 @@ public class ChatActivity extends ParentWithNaviActivity implements MessageListH
             }
 
             @Override
-            public boolean onItemLongClick(int position) {
+            public boolean onItemLongClick(final int position) {
                 //TODO 消息：5.3、删除指定聊天消息
-                mConversationManager.deleteMessage(adapter.getItem(position));
-                adapter.remove(position);
+                mdialog = new AlertDialog.Builder(ChatActivity.this)
+                        .setMessage("确认删除这条记录吗？")
+                        .setTitle("删除聊天记录")
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mdialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mConversationManager.deleteMessage(adapter.getItem(position));
+                                adapter.remove(position);
+                            }
+                        })
+                        .create();
                 return true;
             }
         });
@@ -435,7 +456,7 @@ public class ChatActivity extends ParentWithNaviActivity implements MessageListH
             toast("尚未连接IM服务器");
             return;
         }
-        sendLocalImageMessage();
+//        sendLocalImageMessage();
     }
 
     @OnClick(R.id.tv_camera)
@@ -444,7 +465,7 @@ public class ChatActivity extends ParentWithNaviActivity implements MessageListH
             toast("尚未连接IM服务器");
             return;
         }
-        sendRemoteImageMessage();
+//        sendRemoteImageMessage();
     }
 
     @OnClick(R.id.tv_location)
@@ -546,7 +567,7 @@ public class ChatActivity extends ParentWithNaviActivity implements MessageListH
     /**
      * 发送远程音频文件
      */
-    private void sendRemoteAudioMessage(){
+    private void sendRemoteAudioMessage() {
         //TODO 发送消息：6.5、发送本地音频文件消息
         BmobIMAudioMessage audio = new BmobIMAudioMessage();
         audio.setRemoteUrl("此处替换为你远程的音频文件地址");
@@ -565,7 +586,7 @@ public class ChatActivity extends ParentWithNaviActivity implements MessageListH
     /**
      * 发送远程视频文件
      */
-    private void sendRemoteVideoMessage(){
+    private void sendRemoteVideoMessage() {
         //TODO 发送消息：6.7、发送本地音频文件消息
         BmobIMAudioMessage audio = new BmobIMAudioMessage();
         audio.setRemoteUrl("此处替换为你远程的音频文件地址");
@@ -580,6 +601,7 @@ public class ChatActivity extends ParentWithNaviActivity implements MessageListH
         BmobIMFileMessage file = new BmobIMFileMessage("此处替换为你本地的文件地址");
         mConversationManager.sendMessage(file, listener);
     }
+
     /**
      * 发送远程文件
      */
@@ -589,6 +611,7 @@ public class ChatActivity extends ParentWithNaviActivity implements MessageListH
         file.setRemoteUrl("此处替换为你远程的文件地址");
         mConversationManager.sendMessage(file, listener);
     }
+
     /**
      * 发送语音消息
      *
@@ -683,7 +706,6 @@ public class ChatActivity extends ParentWithNaviActivity implements MessageListH
     private void scrollToBottom() {
         layoutManager.scrollToPositionWithOffset(adapter.getItemCount() - 1, 0);
     }
-
 
 
     //TODO 消息接收：8.2、单个页面的自定义接收器

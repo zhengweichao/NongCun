@@ -194,12 +194,14 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
                 .setCompressListener(new OnCompressListener() { //设置回调
                     @Override
                     public void onStart() {
+                        //开始压缩之前，显示等待提示框
                         LoadDialog.show(mActivity, "正在进行图片压缩ing……");
                     }
 
                     @Override
                     public void onSuccess(File file) {
                         LogUtils.e("压缩成功");
+                        //压缩成功之后，等待提示框消失，并执行上传操作
                         LoadDialog.dismiss(mActivity);
                         photos.add(file.getAbsolutePath());
 
@@ -426,6 +428,7 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
             Toast.makeText(mActivity, "请选择3张图片", Toast.LENGTH_SHORT).show();
             return;
         }*/
+        //如果选择的图片数目不为0，那么就开始进行图片压缩。
         if (selImageList.size() != 0) {
             LogUtils.e("开始压缩……");
             ArrayList<String> paths = new ArrayList<>();
@@ -433,7 +436,9 @@ public class Fragment2_sale extends BaseFragment implements ImagePickerAdapter.O
                 paths.add(selImageList.get(i).path);
             }
             initLuban(paths);
-        } else {
+        }
+        //否则的话，执行没有图片的供应信息上传。
+        else {
             BmobUpSaleNoPic();
         }
 

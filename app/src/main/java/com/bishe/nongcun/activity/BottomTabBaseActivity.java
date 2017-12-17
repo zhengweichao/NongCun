@@ -159,15 +159,21 @@ public abstract class BottomTabBaseActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnSound)
     public void onViewClicked() {
+        // 读取SharedPreferences中sound对应的值，当其为true时则判定打开了语音帮助。当读取不到时，默认为true
         Boolean sound = (Boolean) SPUtils.get(BottomTabBaseActivity.this, "sound", true);
+        //如果打开了语音帮助，则进行语音的播放或者暂停操作
         if (sound) {
+            // 如果音频播放器不为空，并且正在播放声音，那么停止播放
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
-            } else {
+            }
+            // 否则，进行声音的播放
+            else {
                 play("001.mp3");
             }
-
-        } else {
+        }
+        //如果没有打开语音帮助，则进行吐司提示
+        else {
             Toast.makeText(this, "暂未开启语音帮助！", Toast.LENGTH_SHORT).show();
         }
 
@@ -191,19 +197,26 @@ public abstract class BottomTabBaseActivity extends AppCompatActivity {
     private void play(String filename) {
         this.filename = filename;
         try {
-            AssetManager assetManager = this.getAssets();   ////获得该应用的AssetManager
-            AssetFileDescriptor afd = assetManager.openFd(filename);   //根据文件名找到文件
+            //获得应用的AssetManager
+            AssetManager assetManager = this.getAssets();
+            //根据文件名找到文件
+            AssetFileDescriptor afd = assetManager.openFd(filename);
             //对mediaPlayer进行实例化
             mediaPlayer = new MediaPlayer();
+            //如果正在播放，则重置为初始状态
             if (mediaPlayer.isPlaying()) {
-                mediaPlayer.reset();    //如果正在播放，则重置为初始状态
+                mediaPlayer.reset();
             }
+            //设置资源目录
             mediaPlayer.setDataSource(afd.getFileDescriptor(),
-                    afd.getStartOffset(), afd.getLength());     //设置资源目录
-            mediaPlayer.prepare();//缓冲
-            mediaPlayer.start();//开始或恢复播放
+                    afd.getStartOffset(), afd.getLength());
+            //缓冲
+            mediaPlayer.prepare();
+            //开始或恢复播放
+            mediaPlayer.start();
         } catch (IOException e) {
-            LogUtils.e("没有找到这个文件");
+            //如果找不到这个文件，则会产生IOException,包裹异常,防止APP崩溃，并打印异常信息
+            LogUtils.e("没有找到这个文件" + e.toString());
             e.printStackTrace();
         }
     }
@@ -211,6 +224,7 @@ public abstract class BottomTabBaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        // 如果音频播放器不为空，并且正在播放声音，那么停止播放
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
         }

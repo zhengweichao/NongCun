@@ -59,19 +59,20 @@ public class MySaleActivity extends BaseActivity {
 
     @Override
     void initListener() {
+        //        我的出售条目长按点击事件
         mySaleAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(@NonNull View view, final int position) {
-                managerAdmin(position);
+                manageMySale(position);
                 return true;
             }
-
         });
 
-        //        最近报价条目点击跳转
+        //        我的出售条目点击跳转
         mySaleAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(@NonNull View view, int adapterPosition) {
+                //跳转到详情页面，携带参数为已经经过序列化的出售条目的bean类。
                 Intent intent = new Intent(MySaleActivity.this, FoodDetailActivity.class);
                 intent.putExtra("newprice", data.get(adapterPosition));
                 startActivity(intent);
@@ -147,23 +148,24 @@ public class MySaleActivity extends BaseActivity {
     private CommonPopupWindow popupWindow;
 
     /**
-     * 管理员操作框
+     * 出售操作框
      *
      * @param position
      */
-    public void managerAdmin(final int position) {
-
+    public void manageMySale(final int position) {
+        //如果已经弹出popupWindow，则为重复点击，不做操作。
         if (popupWindow != null && popupWindow.isShowing())
             return;
+        // 获取填充布局对象
         View upView = LayoutInflater.from(this).inflate(R.layout.popup_up, null);
         //测量View的宽高
         CommonUtil.measureWidthAndHeight(upView);
 //        final AdminBean adminBean = adminBeen.get(position);
         popupWindow = new CommonPopupWindow.Builder(this)
                 .setView(R.layout.popup_up)
-                .setWidthAndHeight(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                .setWidthAndHeight(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)//设置宽度以及高度
                 .setBackGroundLevel(0.6f)//取值范围0.0f-1.0f 值越小越暗
-                .setAnimationStyle(R.style.AnimUp)
+                .setAnimationStyle(R.style.AnimUp)//设置动画类型
                 .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
                     @Override
                     public void getChildView(View view, int layoutResId) {
@@ -188,6 +190,7 @@ public class MySaleActivity extends BaseActivity {
                                 btn_admin_send_msg.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        //跳转页面
                                         Intent intent = new Intent(MySaleActivity.this, ResultActivity.class);
                                         intent.putExtra("kind1", data.get(position).getKind1());
                                         intent.putExtra("kind2", data.get(position).getKind2());
@@ -203,7 +206,7 @@ public class MySaleActivity extends BaseActivity {
                                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-
+                                        //弹出确认删除提示框
                                         AlertDialog dialog = new AlertDialog.Builder(MySaleActivity.this)
                                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                                     @Override
@@ -222,7 +225,6 @@ public class MySaleActivity extends BaseActivity {
                                                 .setIcon(R.mipmap.ic_launcher)
                                                 .create();
                                         dialog.show();
-
                                         if (popupWindow != null) {
                                             popupWindow.dismiss();
                                         }
@@ -232,7 +234,9 @@ public class MySaleActivity extends BaseActivity {
                     }
                 })
                 .create();
+//        从底部弹出popupWindow，进行显示
         popupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.BOTTOM, 0, 0);
+
     }
 
 }

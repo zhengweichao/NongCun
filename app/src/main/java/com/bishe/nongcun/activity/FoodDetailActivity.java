@@ -23,7 +23,6 @@ import com.youth.banner.BannerConfig;
 import java.util.ArrayList;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMConversation;
@@ -57,6 +56,7 @@ public class FoodDetailActivity extends BaseActivity {
     Button btDetailFoodsIm;
     @Bind(R.id.tv_detail_foods_count)
     TextView tvDetailFoodsCount;
+
     private PriceItem newprice;
 
     @Override
@@ -66,7 +66,6 @@ public class FoodDetailActivity extends BaseActivity {
 
     @Override
     void initView() {
-
         newprice = (PriceItem) getIntent().getExtras().get("newprice");
 
         ArrayList images = new ArrayList<>();
@@ -107,7 +106,7 @@ public class FoodDetailActivity extends BaseActivity {
     @Override
     void initData() {
         if (!TextUtils.isEmpty(newprice.getCount())) {
-            tvDetailFoodsCount.setText("产品数量："+newprice.getCount());
+            tvDetailFoodsCount.setText("产品数量：" + newprice.getCount());
         } else {
             tvDetailFoodsCount.setVisibility(View.GONE);
         }
@@ -157,10 +156,11 @@ public class FoodDetailActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_detail_foods_tel:
+
                 String mobilePhoneNumber = newprice.getAuthor().getMobilePhoneNumber();
+//                如果用户手机号不为空
                 if (!TextUtils.isEmpty(mobilePhoneNumber)) {
-                    LogUtils.e("" + mobilePhoneNumber);
-                    //跳到拨号页面
+                    //通过intent携带数据，跳转至拨号页面
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mobilePhoneNumber));
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -182,19 +182,21 @@ public class FoodDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.bt_detail_foods_im:
-
+                //获取到当前发布信息人的用户信息
                 MyUser user = newprice.getAuthor();
                 LogUtils.e("开始im" + user.getObjectId());
                 BmobIMUserInfo info = new BmobIMUserInfo(user.getObjectId(), user.getUsername(), null);
+                //开启常态私聊会话，保存该会话到本地会话表中
                 BmobIMConversation conversationEntrance = BmobIM.getInstance().startPrivateConversation(info, null);
+                //给intent设置数据，将序列化之后的常态私聊会话信息传递至聊天页面
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("c", conversationEntrance);
+                //跳转聊天页面
                 Intent intent = new Intent(FoodDetailActivity.this, ChatActivity.class);
                 intent.putExtra(FoodDetailActivity.this.getPackageName(), bundle);
                 startActivity(intent);
                 break;
         }
     }
-
 
 }

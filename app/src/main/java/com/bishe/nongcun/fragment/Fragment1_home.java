@@ -83,10 +83,10 @@ public class Fragment1_home extends BaseFragment {
     public void initData() {
         //设置布局管理器
         mGridLayoutManager = new GridLayoutManager(mActivity, 4);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+
         mLMNewPrice = new LinearLayoutManager(mActivity);
         mLMNewBuy = new LinearLayoutManager(mActivity);
-
-        mRecyclerView.setLayoutManager(mGridLayoutManager);
         rv_main_newprice.setLayoutManager(mLMNewPrice);
         rv_main_newbuy.setLayoutManager(mLMNewBuy);
         //        数据
@@ -145,7 +145,7 @@ public class Fragment1_home extends BaseFragment {
      */
     private void initNewsBuyData() {
         BmobQuery<WantBuyItem> query = new BmobQuery<WantBuyItem>();
-        query.order("-createdAt");
+        query.order("-createdAt");//根据创建时间排序
         //返回6条数据，如果不加上这条语句，默认返回10条数据
         query.setLimit(6);
         // 希望在查询帖子信息的同时也把发布人的信息查询出来
@@ -159,6 +159,7 @@ public class Fragment1_home extends BaseFragment {
                     for (WantBuyItem wantBuyItem : object) {
                         mainNewsesdataBuy.add(wantBuyItem);
                     }
+//                    给adapter设置数据
                     mainNewsBuyAdapter.setData(mainNewsesdataBuy);
 
                 } else {
@@ -174,7 +175,7 @@ public class Fragment1_home extends BaseFragment {
         btn_look_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mActivity,FoodsActivity.class);
+                Intent intent = new Intent(mActivity, FoodsActivity.class);
                 startActivity(intent);
             }
         });
@@ -224,7 +225,7 @@ public class Fragment1_home extends BaseFragment {
             public void onClick(View v) {
 
                 Intent intent = new Intent(mActivity, FoodsActivity.class);
-                intent.putExtra("item","wantbuy");
+                intent.putExtra("item", "wantbuy");
                 startActivity(intent);
             }
         });
@@ -233,7 +234,7 @@ public class Fragment1_home extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mActivity, FoodsActivity.class);
-                intent.putExtra("item","price");
+                intent.putExtra("item", "price");
                 startActivity(intent);
 
             }

@@ -57,15 +57,18 @@ public class Fragment4_my extends BaseFragment {
         lvScreen = (ListView) inflate.findViewById(R.id.lvScreen);
         lvOther = (ListView) inflate.findViewById(R.id.lvOther);
         btn_my_logout = (Button) inflate.findViewById(R.id.btn_my_logout);
+//        根据id绑定控件
         switch_state_sound = (Switch) inflate.findViewById(R.id.switch_state_sound);
+//        读取SharedPreferences中sound对应的值，当其为true时则判定打开了语音帮助。默认语音帮助为打开状态
+        Boolean sound = (Boolean) SPUtils.get(mActivity, "sound", true);
+//        设置语音帮助开关状态为设置状态
+        switch_state_sound.setChecked(sound);
 
         return inflate;
     }
 
     @Override
     public void initData() {
-        Boolean sound = (Boolean) SPUtils.get(mActivity, "sound", true);
-        switch_state_sound.setChecked(sound);
 
         adapterScreen = new KeyValueAdapter(mActivity, kvScreenList);
         lvScreen.setAdapter(adapterScreen);
@@ -97,6 +100,7 @@ public class Fragment4_my extends BaseFragment {
 
     @Override
     public void initListener() {
+        //        给开关设置状态监听事件，根据状态更改SharedPreferences中sound对应的值
         switch_state_sound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -121,22 +125,22 @@ public class Fragment4_my extends BaseFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
-                        })
+                        })//设置取消按钮
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 BmobUser.logOut();   //清除缓存用户对象
                                 //TODO 连接：3.2、退出登录需要断开与IM服务器的连接
-                                BmobIM.getInstance().disConnect();
-                                getActivity().finish();
-                                startActivity(new Intent(mActivity, LoginActivity.class));
+                                BmobIM.getInstance().disConnect();//断开与IM服务器的连接
+                                startActivity(new Intent(mActivity, LoginActivity.class));//跳转至登录页面
+                                getActivity().finish();//结束当前页面
                             }
-                        })
-                        .setMessage("确定要退出登录么？")
-                        .setTitle("退出登录")
-                        .setIcon(R.mipmap.ic_launcher)
-                        .create();
-                dialog.show();
+                        })//设置确定按钮
+                        .setTitle("退出登录")//设置标题
+                        .setMessage("确定要退出登录么？")//设置内容文本信息
+                        .setIcon(R.mipmap.ic_launcher)//设置应用图标
+                        .create();//创建对话框
+                dialog.show();//展示对话框
             }
         });
 

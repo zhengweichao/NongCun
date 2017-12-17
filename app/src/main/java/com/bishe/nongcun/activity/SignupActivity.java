@@ -10,16 +10,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bishe.nongcun.R;
+import com.bishe.nongcun.bean.MyInstallation;
 import com.bishe.nongcun.bean.MyUser;
 import com.bishe.nongcun.utils.LogUtils;
 import com.bishe.nongcun.utils.StringUtils;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobInstallationManager;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import rx.functions.Action1;
 
 /**
  * 注册页面
@@ -115,6 +121,7 @@ public class SignupActivity extends BaseActivity {
             public void done(MyUser user, BmobException e) {
                 if (e == null) {
                     LogUtils.e("注册成功" + user.getUsername() + "-" + user.getMobilePhoneNumber() + "-" + user.getObjectId());
+                    modifyInstallationUser(user);
                     onSignupSuccess();
                     //对话框消失
                     progressDialog.dismiss();
@@ -253,5 +260,48 @@ public class SignupActivity extends BaseActivity {
                 break;
 
         }
+    }
+
+
+    /**
+     * 修改设备表的用户信息：先查询设备表中的数据，再修改数据中用户信息
+     * @param user
+     */
+    private void modifyInstallationUser(final MyUser user) {
+        BmobQuery<MyInstallation> bmobQuery = new BmobQuery<>();
+        final String id = BmobInstallationManager.getInstallationId();
+        bmobQuery.addWhereEqualTo("installationId", id);
+        bmobQuery.findObjectsObservable(MyInstallation.class)
+                .subscribe(new Action1<List<MyInstallation>>() {
+                    @Override
+                    public void call(List<MyInstallation> installations) {
+
+                        if (installations.size() > 0) {
+                            MyInstallation installation = installations.get(0);
+                            installation.setMyuser(user);
+                            installation.updateObservable()
+                                    .subscribe(new Action1<Void>() {
+                                        @Override
+                                        public void call(Void aVoid) {
+                                            LogUtils.e("注册 - 更新设备用户信息成功！");
+                                        }
+                                    }, new Action1<Throwable>() {
+                                        @Override
+                                        public void call(Throwable throwable) {
+                                            LogUtils.e("注册 - 更新设备用户信息失败：" + throwable.getMessage());
+                                        }
+                                    });
+
+                        } else {
+                            LogUtils.e("注册 - 后台不存在此设备Id的数据，请确认此设备Id是否正确！\n" + id);
+                        }
+
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtils.e("注册 - 查询设备数据失败：" + throwable.getMessage());
+                    }
+                });
     }
 }

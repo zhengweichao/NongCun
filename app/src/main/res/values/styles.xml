@@ -1,12 +1,16 @@
 <resources>
 
     <!-- Base application theme. -->
-        <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="windowNoTitle">true</item>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!--主题色，标题栏颜色-->
         <item name="colorPrimary">@color/colorPrimary</item>
+        <!--主题暗色，例如状态栏的颜色-->
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!--系统中子控件，复选框，单选按钮等选中时的颜色-->
         <item name="colorAccent">@color/colorAccent</item>
+        <!-- 设置无标题 -->
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">

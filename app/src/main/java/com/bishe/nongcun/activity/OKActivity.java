@@ -1,6 +1,7 @@
 package com.bishe.nongcun.activity;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -11,6 +12,8 @@ import android.widget.Button;
 import com.bishe.nongcun.R;
 import com.bishe.nongcun.adapter.MyPushAdapter;
 import com.bishe.nongcun.adapter.MySaleAdapter;
+import com.bishe.nongcun.bean.MyInstallation;
+import com.bishe.nongcun.bean.MyUser;
 import com.bishe.nongcun.bean.PriceItem;
 import com.bishe.nongcun.bean.WantBuyItem;
 import com.bishe.nongcun.utils.LogUtils;
@@ -21,9 +24,12 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobPushManager;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.PushListener;
+import xyz.zpayh.adapter.OnItemClickListener;
 
 public class OKActivity extends BaseActivity {
     @Bind(R.id.btn_my_wantbuy)
@@ -34,6 +40,7 @@ public class OKActivity extends BaseActivity {
     RecyclerView rvOkWantbuy;
     @Bind(R.id.rv_ok_price)
     RecyclerView rvOkPrice;
+
     private String kind1;
     private String kind2;
     private MyPushAdapter myPushAdapter;
@@ -70,14 +77,14 @@ public class OKActivity extends BaseActivity {
         rvOkWantbuy.setVisibility(View.VISIBLE);
         myPushAdapter = new MyPushAdapter();
         wantBuyItems = new ArrayList<>();
-        LoadDialog.show(OKActivity.this,"正在进行匹配");
+        LoadDialog.show(OKActivity.this, "正在进行匹配");
         BmobQuery<WantBuyItem> query = new BmobQuery<WantBuyItem>();
         if (!TextUtils.isEmpty(kind1) && !TextUtils.isEmpty(kind2)) {
             query.addWhereEqualTo("kind1", kind1);
             query.addWhereEqualTo("kind2", kind2);
         }
         query.order("-createdAt");
-        query.setLimit(20);
+        query.setLimit(10);
         query.include("author");
         //执行查询方法
         query.findObjects(new FindListener<WantBuyItem>() {
@@ -89,12 +96,49 @@ public class OKActivity extends BaseActivity {
                         wantBuyItems.add(wantBuyItem);
                     }
                     myPushAdapter.setData(wantBuyItems);
+                    myPushAdapter.setOnItemClickListener(new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(@NonNull View view, int adapterPosition) {
+                            Intent intent = new Intent(OKActivity.this, WantBuyDetailActivity.class);
+                            intent.putExtra("wantbuy", wantBuyItems.get(adapterPosition));
+                            startActivity(intent);
+                        }
+                    });
+
                     rvOkWantbuy.setAdapter(myPushAdapter);
                     LogUtils.e("初始化加载完毕");
                     LoadDialog.dismiss(OKActivity.this);
+                    if (wantBuyItems != null) {
+                        push();
+                    }
+
                 } else {
                     Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
                     LoadDialog.dismiss(OKActivity.this);
+                }
+            }
+        });
+
+
+    }
+
+    private void push() {
+        ArrayList<MyUser> myUsers = new ArrayList<>();
+        for (int i = 0; i < wantBuyItems.size(); i++) {
+            myUsers.add(wantBuyItems.get(i).getAuthor());
+        }
+        BmobPushManager bmobPushManager = new BmobPushManager();
+        BmobQuery<MyInstallation> query0 = MyInstallation.getQuery();
+        //TODO 替换成你作为判断需要推送的属性名和属性值，推送前请确认installation表已有该属性
+        query0.addWhereContainedIn("myuser", myUsers);
+        bmobPushManager.setQuery(query0);
+        bmobPushManager.pushMessage("消息内容", new PushListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    LogUtils.e("推送成功！");
+                } else {
+                    LogUtils.e("异常：" + e.getMessage());
                 }
             }
         });
@@ -107,15 +151,15 @@ public class OKActivity extends BaseActivity {
         rvOkPrice.setVisibility(View.VISIBLE);
         mySaleAdapter = new MySaleAdapter();
         priceItems = new ArrayList<>();
-        LoadDialog.show(OKActivity.this,"正在进行匹配");
+        LoadDialog.show(OKActivity.this, "正在进行匹配");
         BmobQuery<PriceItem> query = new BmobQuery<PriceItem>();
         query.order("-createdAt");
         if (!TextUtils.isEmpty(kind1) && !TextUtils.isEmpty(kind2)) {
-            LogUtils.e("添加条件"+kind1+kind2);
+            LogUtils.e("添加条件" + kind1 + kind2);
             query.addWhereEqualTo("kind1", kind1);
             query.addWhereEqualTo("kind2", kind2);
         }
-        query.setLimit(20);
+        query.setLimit(10);
         query.include("author");
         //执行查询方法
         query.findObjects(new FindListener<PriceItem>() {
@@ -127,6 +171,15 @@ public class OKActivity extends BaseActivity {
                         priceItems.add(priceItem);
                     }
                     mySaleAdapter.setData(priceItems);
+                    mySaleAdapter.setOnItemClickListener(new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(@NonNull View view, int position) {
+                            Intent intent = new Intent(OKActivity.this, FoodDetailActivity.class);
+                            intent.putExtra("newprice", priceItems.get(position));
+                            startActivity(intent);
+                        }
+                    });
+
                     rvOkPrice.setAdapter(mySaleAdapter);
                     LoadDialog.dismiss(OKActivity.this);
                 } else {

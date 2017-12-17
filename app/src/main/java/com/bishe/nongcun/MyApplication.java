@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.bishe.nongcun.imageloader.PicassoImageLoader;
 import com.bishe.nongcun.net.DemoMessageHandler;
+import com.bishe.nongcun.utils.LogUtils;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.view.CropImageView;
 import com.lzy.okgo.OkGo;
@@ -13,6 +14,12 @@ import java.io.File;
 import java.io.FileReader;
 
 import cn.bmob.newim.BmobIM;
+import cn.bmob.push.BmobPush;
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.BmobInstallationManager;
+import cn.bmob.v3.InstallationListener;
+import cn.bmob.v3.exception.BmobException;
 
 /**
  * @ 创建时间: 2017/6/10 on 17:36.
@@ -36,8 +43,6 @@ public class MyApplication extends Application {
         MyApplication.INSTANCE = a;
     }
 
-
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -57,10 +62,25 @@ public class MyApplication extends Application {
         imagePicker.setOutPutX(1000);//保存文件的宽度。单位像素
         imagePicker.setOutPutY(1000);//保存文件的高度。单位像素
 
+
+        Bmob.initialize(this, "80c67b4c1ceca9635ef33bc3248debca");
         if (getApplicationInfo().packageName.equals(getMyProcessName())) {
             BmobIM.init(this);
             BmobIM.registerDefaultMessageHandler(new DemoMessageHandler());
         }
+        // 使用推送服务时的初始化操作
+        BmobInstallationManager.getInstance().initialize(new InstallationListener<BmobInstallation>() {
+            @Override
+            public void done(BmobInstallation bmobInstallation, BmobException e) {
+                if (e == null) {
+                    LogUtils.e(bmobInstallation.getObjectId() + "-" + bmobInstallation.getInstallationId());
+                } else {
+                    LogUtils.e(e.getMessage());
+                }
+            }
+        });
+// 启动推送服务
+        BmobPush.startWork(this);
 
     }
 
@@ -81,5 +101,7 @@ public class MyApplication extends Application {
             return null;
         }
     }
+
+
 
 }

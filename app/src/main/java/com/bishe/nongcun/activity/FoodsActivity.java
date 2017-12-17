@@ -67,10 +67,11 @@ public class FoodsActivity extends BaseActivity {
 
     @Override
     void initListener() {
+        //        给RadioGroup设置选中监听事件
         rgCandoList.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                LogUtils.i(checkedId + "条目id");
+                //如果被选中的是求购按钮，那么令ViewPager展示求购页面（第0页），否则展示出售页面（第1页）
                 if (checkedId == R.id.rbtn_qiugou) {
                     vpFoods.setCurrentItem(0);
                 } else {
@@ -78,7 +79,7 @@ public class FoodsActivity extends BaseActivity {
                 }
             }
         });
-
+        // 给ViewPager添加页面改变监听事件
         vpFoods.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -87,7 +88,7 @@ public class FoodsActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                LogUtils.e(position + "条目id");
+                //如果当前ViewPager展示的是求购页面（第0页），则让RadioGroup选中求购按钮，否则选中出售按钮
                 if (position == 0) {
                     rgCandoList.check(R.id.rbtn_qiugou);
                 } else {

@@ -111,8 +111,8 @@ public class Fragment3_buy extends BaseFragment {
                 }
 
                 LogUtils.e("马上就要发布了……");
-                WantBuyItem wantBuyItem = new WantBuyItem();
                 //注意：不能调用.setObjectId("")方法
+                WantBuyItem wantBuyItem = new WantBuyItem();
                 MyUser user = BmobUser.getCurrentUser(MyUser.class);
                 wantBuyItem.setContent(content);
                 wantBuyItem.setCount(count + wantbuyUnit);

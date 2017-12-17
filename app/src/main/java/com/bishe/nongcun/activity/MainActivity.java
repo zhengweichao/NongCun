@@ -56,17 +56,23 @@ public class MainActivity extends BottomTabBaseActivity {
      * @return
      */
     @Override
+    //重写按键响应事件
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //如果按下的按键是返回键，并且按下次数不为0时，进入判断
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            //如果距离上次点击返回键时间大于2秒，则弹出吐司，提示再按一次退出，并记录本次时间
             if ((System.currentTimeMillis() - mExitTime) > 2000) {
                 Toast.makeText(MainActivity.this, "再按一次退出", Toast.LENGTH_SHORT).show();
                 mExitTime = System.currentTimeMillis();
-            } else {
+            }
+            //否则的话，结束当前页面，并退出系统
+            else {
                 finish();
                 System.exit(0);
             }
             return true;
         }
+        //其它按键的响应事件仍按照父类中的逻辑执行
         return super.onKeyDown(keyCode, event);
     }
 

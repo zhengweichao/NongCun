@@ -13,10 +13,13 @@
     </string-array>
 
     <string-array name="areas">
+        <!--区（海港区、山海关区、北戴河区、抚宁区）、2个县（昌黎县、卢龙县）、1个自治县（青龙满族自治县）-->
         <item>全秦皇岛</item>
-        <item>北戴河</item>
         <item>海港区</item>
         <item>山海关</item>
+        <item>北戴河</item>
+        <item>抚宁区</item>
+        <item>昌黎县</item>
         <item>卢龙县</item>
         <item>青龙县</item>
     </string-array>

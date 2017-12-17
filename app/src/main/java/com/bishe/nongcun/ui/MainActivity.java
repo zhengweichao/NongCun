@@ -196,7 +196,7 @@ public class MainActivity extends BaseActivity {
      *
      * @param event
      */
-    //TODO 消息接收：8.5、通知有自定义消息接收
+    //TODO 消息接收：8.5、通+知有自定义消息接收
     @Subscribe
     public void onEventMainThread(RefreshEvent event) {
         checkRedPoint();
