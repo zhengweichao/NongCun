@@ -126,8 +126,11 @@ public class ConversationActivity extends BaseActivity {
      * 查询本地会话
      */
     private void query() {
+//        绑定填充数据
         adapter.bindDatas(getConversations());
+//        更新数据
         adapter.notifyDataSetChanged();
+//        设置刷新状态消失
         swRefresh.setRefreshing(false);
     }
 

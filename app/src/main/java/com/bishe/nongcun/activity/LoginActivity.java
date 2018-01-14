@@ -69,13 +69,11 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void done(MyUser user, BmobException e) {
                 if (user != null) {
-                    LogUtils.e("登录成功:");
-                    modifyInstallationUser(user);
-                    onLoginSuccess();
+                    modifyInstallationUser(user);//修改设备表的用户信息
+                    onLoginSuccess();//登陆成功
                     progressDialog.dismiss();
                 } else {
-                    LogUtils.e("登录失败");
-                    onLoginFailed();
+                    onLoginFailed();//登陆失败
                     progressDialog.dismiss();
                 }
             }

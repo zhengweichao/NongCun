@@ -123,22 +123,19 @@ public class MyPushActivity extends BaseActivity {
 
         WantBuyItem query = new WantBuyItem();
         query.setObjectId(Objectid);
-        //返回6条数据，如果不加上这条语句，默认返回10条数据
-        //执行查询方法
+        //执行删除操作
         query.delete(new UpdateListener() {
             @Override
             public void done(BmobException e) {
-
                 if (e == null) {
                     LogUtils.e("删除成功");
                     Toast.makeText(MyPushActivity.this, "删除成功！", Toast.LENGTH_SHORT).show();
-                    tag=true;
+                    tag = true;
                     initData();
                 } else {
                     LogUtils.e("删除失败" + e);
                     Toast.makeText(MyPushActivity.this, "删除失败，请稍后尝试！", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
@@ -150,18 +147,18 @@ public class MyPushActivity extends BaseActivity {
      * @param position
      */
     public void managerAdmin(final int position) {
-
+        //如果popupWindow不为空，并且正在展示，那么不做操作
         if (popupWindow != null && popupWindow.isShowing())
             return;
         View upView = LayoutInflater.from(this).inflate(R.layout.popup_up, null);
         //测量View的宽高
         CommonUtil.measureWidthAndHeight(upView);
-//        final AdminBean adminBean = adminBeen.get(position);
+        //构建popupWindow
         popupWindow = new CommonPopupWindow.Builder(this)
-                .setView(R.layout.popup_up)
-                .setWidthAndHeight(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                .setView(R.layout.popup_up)//设置布局
+                .setWidthAndHeight(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)//设定宽度和高度
                 .setBackGroundLevel(0.6f)//取值范围0.0f-1.0f 值越小越暗
-                .setAnimationStyle(R.style.AnimUp)
+                .setAnimationStyle(R.style.AnimUp)//设置弹出动画类型
                 .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
                     @Override
                     public void getChildView(View view, int layoutResId) {
@@ -173,7 +170,7 @@ public class MyPushActivity extends BaseActivity {
                                 btn_look_admin_info.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        // TODO: 2017/8/11 查看信息
+                                        // 查看信息
                                         Intent intent = new Intent(MyPushActivity.this, WantBuyDetailActivity.class);
                                         intent.putExtra("wantbuy", data.get(position));
                                         startActivity(intent);
@@ -187,7 +184,7 @@ public class MyPushActivity extends BaseActivity {
                                 btn_admin_send_msg.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        // TODO: 2017/8/9 查看匹配信息
+                                        //  查看匹配信息
                                         Intent intent = new Intent(MyPushActivity.this, ResultActivity.class);
                                         intent.putExtra("kind1", data.get(position).getKind1());
                                         intent.putExtra("kind2", data.get(position).getKind2());
@@ -232,9 +229,11 @@ public class MyPushActivity extends BaseActivity {
                     }
                 })
                 .create();
+
+
+        //设置popupWindow从底部弹出。
         popupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.BOTTOM, 0, 0);
     }
-
 
 
 }

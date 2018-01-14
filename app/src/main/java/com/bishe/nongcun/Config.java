@@ -1,7 +1,7 @@
 package com.bishe.nongcun;
 
 /**
- * @author :smile
+ * @author:smile
  * @project:Config
  * @date :2016-01-15-18:23
  */

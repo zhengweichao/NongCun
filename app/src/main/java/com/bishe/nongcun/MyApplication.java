@@ -79,7 +79,7 @@ public class MyApplication extends Application {
                 }
             }
         });
-// 启动推送服务
+        // 启动推送服务
         BmobPush.startWork(this);
 
     }

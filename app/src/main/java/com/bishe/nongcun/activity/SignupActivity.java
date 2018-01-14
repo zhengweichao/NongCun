@@ -96,43 +96,25 @@ public class SignupActivity extends BaseActivity {
         String mobile = _mobileText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        MyUser bu = new MyUser();
-        bu.setUsername(username);
-        bu.setPassword(password);
-        bu.setMobilePhoneNumber(mobile);
-        //注意：不能用save方法进行注册
-        /*bu.signUp(new SaveListener<MyUser>() {
-            @Override
-            public void done(MyUser s, BmobException e) {
-                if (e == null) {
-                    LogUtils.e("注册成功");
-                    onSignupSuccess();
-                    //对话框消失
-                    progressDialog.dismiss();
-                } else {
-                    LogUtils.e("注册失败");
-                    onSignupFailed(1);
-                    progressDialog.dismiss();
-                }
-            }
-        });*/
-        bu.signOrLogin(code, new SaveListener<MyUser>() {
+        MyUser myUser = new MyUser();
+        myUser.setUsername(username);//设置用户名
+        myUser.setPassword(password);//设置密码
+        myUser.setMobilePhoneNumber(mobile);//设置手机号
+        myUser.signOrLogin(code, new SaveListener<MyUser>() {//注意：不能用save方法进行注册
             @Override
             public void done(MyUser user, BmobException e) {
                 if (e == null) {
                     LogUtils.e("注册成功" + user.getUsername() + "-" + user.getMobilePhoneNumber() + "-" + user.getObjectId());
-                    modifyInstallationUser(user);
-                    onSignupSuccess();
+                    modifyInstallationUser(user);//修改设备表的用户信息
+                    onSignupSuccess();//注册成功
                     //对话框消失
                     progressDialog.dismiss();
                 } else {
                     LogUtils.e("注册失败" + e.getMessage());
-                    onSignupFailed(1);
+                    onSignupFailed(1);//注册失败
                     progressDialog.dismiss();
                 }
-
             }
-
         });
 
 
@@ -237,7 +219,7 @@ public class SignupActivity extends BaseActivity {
                 String mobile = _mobileText.getText().toString();
                 String password = _passwordText.getText().toString();
 
-                // TODO: 2017/9/7 获取验证码
+                // 获取验证码
                 BmobSMS.requestSMSCode(mobile, "城农通", new QueryListener<Integer>() {
                     @Override
                     public void done(Integer smsId, BmobException ex) {

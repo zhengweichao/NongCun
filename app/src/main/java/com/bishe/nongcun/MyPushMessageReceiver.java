@@ -14,6 +14,9 @@ import com.bishe.nongcun.activity.AboutActivity;
 import com.bishe.nongcun.utils.LogUtils;
 import com.bishe.nongcun.utils.VibratorUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.bmob.push.PushConstants;
 
 /**
@@ -22,7 +25,7 @@ import cn.bmob.push.PushConstants;
  * @ 作者: 郑卫超 QQ: 2318723605
  */
 
-//TODO 集成：1.3、创建自定义的推送消息接收器，并在清单文件中注册
+//创建自定义的推送消息接收器，并在清单文件中注册
 public class MyPushMessageReceiver extends BroadcastReceiver {
 
     @Override
@@ -32,27 +35,33 @@ public class MyPushMessageReceiver extends BroadcastReceiver {
 
             LogUtils.e("bmob客户端收到推送内容：" + intent.getStringExtra("msg"));
             VibratorUtil.Vibrate(context, 800);
-            AlertDialog dialog = new AlertDialog.Builder(context)
-                    .setMessage(intent.getStringExtra("msg"))
-                    .setTitle("您有新的消息")
-                    .setPositiveButton("查看", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            LogUtils.e("点击确定");
-                        }
-                    })
-                    .setNegativeButton("稍后查看", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            LogUtils.e("点击取消");
-                            dialog.dismiss();
-                        }
-                    })
-                    .create();
-            //需要把对话框的类型设为TYPE_SYSTEM_ALERT，否则对话框无法在广播接收器里弹出
-            dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-            dialog.show();
+            try {
+                JSONObject jsonObject = new JSONObject(intent.getStringExtra("msg"));
+                AlertDialog dialog = new AlertDialog.Builder(context)
+                        .setMessage(jsonObject.getString("alert"))
+                        .setTitle(jsonObject.getString("title"))
+                        .setPositiveButton("查看", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                LogUtils.e("点击确定");
+                            }
+                        })
+                        .setNegativeButton("稍后查看", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                LogUtils.e("点击取消");
+                                dialog.dismiss();
+                            }
+                        })
+                        .create();
+                //需要把对话框的类型设为TYPE_SYSTEM_ALERT，否则对话框无法在广播接收器里弹出
+                dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                dialog.show();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
         }
     }
-
 }

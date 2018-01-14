@@ -12,7 +12,7 @@ import java.io.File;
 /**
  * @ 创建时间: 2017/8/22 on 10:17.
  * @ 描述：
- * @ 作者: 郑卫超 QQ: 2318723605
+ * @ 作者: 郑卫超 QQ: 2318723605C:\Users\Administrator\.android\build-cache\895ed11e48e4f87615d07c7ca179d3576e37a9ab\output\res\mipmap-xxhdpi-v4\default_image.png
  */
 
 public class PicassoImageLoader implements ImageLoader {
